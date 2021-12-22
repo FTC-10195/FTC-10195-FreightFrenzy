@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(360), Math.toRadians(180), 10)
                 .setDimensions(13, 18);
 
-        RoadRunnerBotEntity entity = myBot.followTrajectorySequence(everythingBlue(myBot.build().getDrive()));
+        RoadRunnerBotEntity entity = myBot.followTrajectorySequence(onlyCyclesBlue(myBot.build().getDrive()));
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_ADI_DARK)
                 .setDarkMode(true)
@@ -84,6 +84,35 @@ public class MeepMeepTesting {
                 .build();
     }
 
+    private static TrajectorySequence onlyCyclesBlue(DriveShim drive) {
+        return drive.trajectorySequenceBuilder(new Pose2d(12, 63, Math.toRadians(-90)))
+                .lineTo(new Vector2d(-12, 42))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
+                .lineTo(new Vector2d(60, 65.5))
+                .lineTo(new Vector2d(24, 65.5))
+                .splineTo(new Vector2d(-12, 42), Math.toRadians(-90))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
+                .lineTo(new Vector2d(60, 65.5))
+                .lineTo(new Vector2d(24, 65.5))
+                .splineTo(new Vector2d(-12, 42), Math.toRadians(-90))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
+                .lineTo(new Vector2d(60, 65.5))
+                .lineTo(new Vector2d(24, 65.5))
+                .splineTo(new Vector2d(-12, 42), Math.toRadians(-90))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
+                .lineTo(new Vector2d(60, 65.5))
+                .lineTo(new Vector2d(24, 65.5))
+                .splineTo(new Vector2d(-12, 42), Math.toRadians(-90))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
+                .lineToConstantHeading(new Vector2d(42, 65.5))
+                .build();
+    }
+
     private static TrajectorySequence everythingBlue(DriveShim drive) {
         return drive.trajectorySequenceBuilder(new Pose2d(-36, 63, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(-24, 40, Math.toRadians(-60)))
@@ -111,6 +140,4 @@ public class MeepMeepTesting {
                 .back(12)
                 .build();
     }
-
-    
 }
