@@ -11,8 +11,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
+
 @Config
-public class Robot {
+public class Robot extends SampleMecanumDrive {
+    public Robot(HardwareMap hardwareMap) {
+        super(hardwareMap);
+    }
+
     public enum DuckState {
         SETUP,
         START,

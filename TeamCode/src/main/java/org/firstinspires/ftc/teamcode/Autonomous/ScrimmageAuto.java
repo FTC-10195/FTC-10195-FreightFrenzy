@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 @Autonomous(name = "Scrimmage Auto", group = "1", preselectTeleOp = "MecanumTeleOp")
 public class ScrimmageAuto extends LinearOpMode {
 
-    private Robot wildWing = new Robot();
+    private Robot wildWing = new Robot(hardwareMap);
 
     @Override
     public void runOpMode() throws InterruptedException {

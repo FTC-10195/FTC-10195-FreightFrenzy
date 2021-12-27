@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 @Autonomous(name = "Red Full Scrimmage Auto", group = "1", preselectTeleOp = "MecanumTeleOp")
 public class RedFullScrimmageAuto extends LinearOpMode {
 
-    private Robot wildWing = new Robot();
+    private Robot wildWing = new Robot(hardwareMap);
     ElapsedTime elapsedTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
     @Override
