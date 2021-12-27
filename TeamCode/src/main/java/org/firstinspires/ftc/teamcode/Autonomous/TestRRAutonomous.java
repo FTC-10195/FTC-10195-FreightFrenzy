@@ -84,12 +84,12 @@ public class TestRRAutonomous extends LinearOpMode {
         if (isStopRequested()) return;
 
         drive.followTrajectoryAsync(placePreloadedBlock);
-        // put lift to correct height
+        // TODO: put lift to correct height
 
         while (opModeIsActive() && !isStopRequested()) {
             switch (currentState) {
                 case PLACE_PRELOADED_BLOCK:
-                    // put lift to correct height
+                    // TODO: put lift to correct height
                     if (!drive.isBusy()) {
                         currentState = State.DELIVER_CARGO;
                         waitTimer.reset();
@@ -97,8 +97,8 @@ public class TestRRAutonomous extends LinearOpMode {
                     break;
 
                 case CYCLE:
-                    // set intake power to 1
-                    // if there's a block inside the basket, reverse intake
+                    // TODO: set intake power to 1
+                    // TODO: if there's a block inside the basket, reverse intake
                     if (!drive.isBusy()) {
                         currentState = State.DELIVER_CARGO;
                     }
@@ -107,7 +107,7 @@ public class TestRRAutonomous extends LinearOpMode {
                 case DELIVER_CARGO:
                     if (waitTimer.seconds() > waitTime) {
                         currentCycle++;
-                        // set the basket servo to the collection position
+                        // TODO: set the basket servo to the collection position
                         if (currentCycle <= numCycles) {
                             currentState = State.CYCLE;
                             drive.followTrajectoryAsync(cycle);
