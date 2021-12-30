@@ -34,11 +34,19 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     // Volatile since accessed by OpMode thread without synchronization
     private volatile ElementPosition position = ElementPosition.LEFT;
 
+    /**
+     * Extracts the green channel from the input frame
+     * @param input The input frame
+     */
     void inputToGreen(Mat input)
     {
         Core.extractChannel(input, green, 2);
     }
 
+    /**
+     * Initialises the pipeline
+     * @param firstFrame The
+     */
     @Override
     public void init(Mat firstFrame)
     {

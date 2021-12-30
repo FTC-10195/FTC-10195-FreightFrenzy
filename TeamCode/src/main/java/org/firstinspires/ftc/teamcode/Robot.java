@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.abs;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
@@ -27,14 +25,14 @@ public class Robot extends SampleMecanumDrive {
     }
     private DuckState duckState = DuckState.SETUP;
 
-    public DcMotorEx fl, fr, bl, br, duckMotor;
+    public DcMotorEx fl, fr, bl, br, duckMotor, intakeMotor;
 
     // Configuration parameters
     public static double slowModePower = 0.35;
     public static double normalModePower = 0.8;
     public static double buttonIsPressedThreshold = 0.10;
 
-    private double flPower, frPower, blPower, brPower;
+    private double flPower, frPower, blPower, brPower, intakePower;
     private double duckVelocity;
 
     ElapsedTime duckMotorTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -64,7 +62,7 @@ public class Robot extends SampleMecanumDrive {
         bl = hwMap.get(DcMotorEx.class, "bl");
         br = hwMap.get(DcMotorEx.class, "br");
         duckMotor = hwMap.get(DcMotorEx.class, "duck");
-        // liftMotor = hwMap.get(DcMotorEx.class, "lift");
+        intakeMotor = hwMap.get(DcMotorEx.class, "intake");
 
         // TODO: Find which motors to reverse
         fl.setDirection(DcMotorEx.Direction.REVERSE);
@@ -72,6 +70,7 @@ public class Robot extends SampleMecanumDrive {
         bl.setDirection(DcMotorEx.Direction.REVERSE);
         br.setDirection(DcMotorEx.Direction.FORWARD);
         duckMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         // Set the behaviour of the motors when a power of 0 is passed; brake means it stops in its current state,
         // float means it allows the motor to freely slow down to a stop
@@ -79,13 +78,15 @@ public class Robot extends SampleMecanumDrive {
         fr.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         bl.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        duckMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        duckMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
-                      boolean duckBackward) {
+                      boolean duckBackward, boolean intakeForward, boolean intakeBackward) {
         drivetrain(leftX, leftY, rightX, slowMode);
         duck(duckForward, duckBackward);
+        intake(intakeForward, intakeBackward);
         setPowers();
     }
 
@@ -176,20 +177,35 @@ public class Robot extends SampleMecanumDrive {
         }
     }
 
+    private void intake(boolean intakeForward, boolean intakeBackward) {
+        if (intakeForward) {
+            intakePower = 1;
+            packet.put("Test", "Test");
+            dashboard.sendTelemetryPacket(packet);
+        } else if (intakeBackward) {
+            intakePower = -1;
+        } else {
+            intakePower = 0;
+        }
+    }
+
     public void setPowers() {
         fl.setPower(flPower);
         fr.setPower(frPower);
         bl.setPower(blPower);
         br.setPower(brPower);
         duckMotor.setVelocity(duckVelocity);
+        intakeMotor.setPower(intakePower);
     }
 
-    public void setPowers(double flPower, double frPower, double blPower, double brPower, double duckVelocity) {
+    public void setPowers(double flPower, double frPower, double blPower, double brPower, double duckVelocity,
+                          double intakePower) {
         fl.setPower(flPower);
         fr.setPower(frPower);
         bl.setPower(blPower);
         br.setPower(brPower);
         duckMotor.setVelocity(duckVelocity);
+        intakeMotor.setPower(intakePower);
     }
 
     public void stopMoving() {
@@ -197,5 +213,7 @@ public class Robot extends SampleMecanumDrive {
         fr.setPower(0);
         bl.setPower(0);
         br.setPower(0);
+        duckMotor.setPower(0);
+        intakeMotor.setPower(0);
     }
 }
