@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Robot;
 
 /**
@@ -44,14 +43,16 @@ public class TestRRAutonomous extends LinearOpMode {
         IDLE
     }
 
+    // Configuration parameters
     public static int numCycles = 4;
     public static double waitTime = 0.5;
+
+    // The current cycle that the robot is running; used for
     private int currentCycle = 0;
 
     State currentState = State.PLACE_PRELOADED_BLOCK;
 
     // Define our start pose
-    // This assumes we start at x: 15, y: 10, heading: 180 degrees
     Pose2d startPose = new Pose2d(12, 63, Math.toRadians(-90));
 
     @Override
@@ -74,8 +75,8 @@ public class TestRRAutonomous extends LinearOpMode {
                 .build();
 
         Trajectory parkInWarehouse = wildWing.trajectoryBuilder(cycle.end(), true)
-                .lineToLinearHeading(new Pose2d(12, 65.5, Math.toRadians(180)))
-                .lineToConstantHeading(new Vector2d(42, 65.5))
+                .splineToSplineHeading(new Pose2d(30, 65.5, Math.toRadians(180)), Math.toRadians(0))
+                .lineTo(new Vector2d(42, 65.5))
                 .build();
 
         ElapsedTime waitTimer = new ElapsedTime();
@@ -85,7 +86,6 @@ public class TestRRAutonomous extends LinearOpMode {
         if (isStopRequested()) return;
 
         wildWing.followTrajectoryAsync(placePreloadedBlock);
-        // TODO: put lift to correct height
 
         while (opModeIsActive() && !isStopRequested()) {
             switch (currentState) {
