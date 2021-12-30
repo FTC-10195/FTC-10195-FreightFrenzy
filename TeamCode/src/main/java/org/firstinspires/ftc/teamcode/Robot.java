@@ -9,14 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
-
 @Config
-public class Robot extends SampleMecanumDrive {
-    public Robot(HardwareMap hardwareMap) {
-        super(hardwareMap);
-    }
-
+public class Robot {
     public enum DuckState {
         SETUP,
         START,
@@ -29,7 +23,7 @@ public class Robot extends SampleMecanumDrive {
 
     // Configuration parameters
     public static double slowModePower = 0.35;
-    public static double normalModePower = 0.8;
+    public static double normalModePower = 1;
     public static double buttonIsPressedThreshold = 0.10;
 
     private double flPower, frPower, blPower, brPower, intakePower;
@@ -50,7 +44,7 @@ public class Robot extends SampleMecanumDrive {
 
     public void init(HardwareMap hwMap, boolean dashboard) {
         // Set up FTC dashboard if desired
-        usingDashboard = dashboard;
+        this.usingDashboard = dashboard;
         if (usingDashboard) {
             this.dashboard = FtcDashboard.getInstance();
             this.packet = new TelemetryPacket();
@@ -140,7 +134,6 @@ public class Robot extends SampleMecanumDrive {
             packet.put("FR Power", frPower);
             packet.put("BL Power", blPower);
             packet.put("BR Power", brPower);
-
             dashboard.sendTelemetryPacket(packet);
         }
     }
@@ -180,8 +173,7 @@ public class Robot extends SampleMecanumDrive {
     private void intake(boolean intakeForward, boolean intakeBackward) {
         if (intakeForward) {
             intakePower = 1;
-            packet.put("Test", "Test");
-            dashboard.sendTelemetryPacket(packet);
+            intakeMotor.setPower(1);
         } else if (intakeBackward) {
             intakePower = -1;
         } else {
