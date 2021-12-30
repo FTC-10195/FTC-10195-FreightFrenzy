@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -10,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 @Autonomous(name = "Red Full Scrimmage Auto", group = "1", preselectTeleOp = "MecanumTeleOp")
 public class RedFullScrimmageAuto extends LinearOpMode {
 
-    private Robot wildWing = new Robot(hardwareMap);
+    private Robot wildWing = new Robot();
     ElapsedTime elapsedTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
     @Override

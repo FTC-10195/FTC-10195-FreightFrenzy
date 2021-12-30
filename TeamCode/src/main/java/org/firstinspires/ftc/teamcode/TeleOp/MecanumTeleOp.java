@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 @TeleOp(name = "Mecanum TeleOp", group = "1")
 public class MecanumTeleOp extends LinearOpMode {
 
-    private Robot wildWing = new Robot(hardwareMap);
+    private Robot wildWing = new Robot();
 
     @Override
     public void runOpMode() throws InterruptedException {

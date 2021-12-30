@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 
 /**
  * This opmode explains how you follow multiple trajectories in succession, asynchronously. This
@@ -58,7 +58,7 @@ public class TestRRAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Lift lift = new Lift(hardwareMap);
-        Robot wildWing = new Robot(hardwareMap);
+        SampleMecanumDrive wildWing = new SampleMecanumDrive(hardwareMap);
 
         // Set the initial pose of the robot
         wildWing.setPoseEstimate(startPose);
