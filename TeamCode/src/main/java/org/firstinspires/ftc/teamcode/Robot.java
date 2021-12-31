@@ -14,8 +14,7 @@ public class Robot {
     public enum DuckState {
         SETUP,
         START,
-        SPEED,
-        WAIT
+        SPEED
     }
     private DuckState duckState = DuckState.SETUP;
 
@@ -91,9 +90,7 @@ public class Robot {
 
     private void drivetrain(double strafe, double straight, double turn, double slowMode) {
         /*
-        The left joystick to move forward/backward/left/right, right joystick to turn
-        gamepad 1 controls movement and wobble goal
-        gamepad 2 controls the shooter and intake
+        Left joystick to move forward/backward/left/right, right joystick to turn
          */
 
         // region Gamepad 1
