@@ -25,18 +25,23 @@ public class Robot {
     public static double slowModePower = 0.35;
     public static double normalModePower = 1;
     public static double buttonIsPressedThreshold = 0.10;
+    public static int cooldown = 250;
+    public static int duckStartTime = 1300;
+    public static int duckSpeedTime = 600;
+    public static int duckNormalVelocity = 600;
+    public static int duckSpeedVelocity = 4000;
 
     private double flPower, frPower, blPower, brPower, intakePower;
     private double duckVelocity;
 
     ElapsedTime duckMotorTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-    public static int duckStartTime = 1300;
-    public static int duckSpeedTime = 600;
 
-    public static int duckNormalVelocity = 600;
-    public static int duckSpeedVelocity = 4000;
 
     private boolean firstFrame = true;
+
+    private boolean intakeOnForward = false;
+    private boolean intakeOnBackward = false;
+    private long intakeLastPressed = 0;
 
     boolean usingDashboard;
     FtcDashboard dashboard;
@@ -84,7 +89,7 @@ public class Robot {
         setPowers();
     }
 
-    public void drivetrain (double strafe, double straight, double turn, double slowMode) {
+    private void drivetrain(double strafe, double straight, double turn, double slowMode) {
         /*
         The left joystick to move forward/backward/left/right, right joystick to turn
         gamepad 1 controls movement and wobble goal
@@ -171,10 +176,19 @@ public class Robot {
     }
 
     private void intake(boolean intakeForward, boolean intakeBackward) {
-        if (intakeForward) {
+        if (intakeForward && System.currentTimeMillis() - intakeLastPressed > cooldown) {
+            intakeLastPressed = System.currentTimeMillis();
+            intakeOnForward = !intakeOnForward;
+            intakeOnBackward = false;
+        } else if (intakeBackward && System.currentTimeMillis() - intakeLastPressed > cooldown) {
+            intakeLastPressed = System.currentTimeMillis();
+            intakeOnBackward = !intakeOnBackward;
+            intakeOnForward = false;
+        }
+
+        if (intakeOnForward) {
             intakePower = 1;
-            intakeMotor.setPower(1);
-        } else if (intakeBackward) {
+        } else if (intakeOnBackward) {
             intakePower = -1;
         } else {
             intakePower = 0;
