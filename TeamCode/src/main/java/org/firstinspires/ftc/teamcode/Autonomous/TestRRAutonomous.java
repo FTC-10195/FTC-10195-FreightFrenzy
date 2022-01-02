@@ -109,6 +109,7 @@ public class TestRRAutonomous extends LinearOpMode {
                     if (waitTimer.seconds() > waitTime) {
                         currentCycle++;
                         // TODO: set the basket servo to the collection position
+                        // TODO: set intake power to 1
                         if (currentCycle <= numCycles) {
                             currentState = State.CYCLE;
                             wildWing.followTrajectoryAsync(cycle);
