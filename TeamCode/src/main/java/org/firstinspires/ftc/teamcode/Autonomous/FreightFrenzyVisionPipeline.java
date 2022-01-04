@@ -40,12 +40,13 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
      */
     void inputToGreen(Mat input)
     {
+        // Extracts the channel with index 2 (green) from input frame, which is added to the green Mat
         Core.extractChannel(input, green, 2);
     }
 
     /**
      * Initialises the pipeline
-     * @param firstFrame The
+     * @param firstFrame First captured frame
      */
     @Override
     public void init(Mat firstFrame)
@@ -57,6 +58,11 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
         RegionGreen.add(green.submat(new Rect(Region3[0], Region3[1])));
     }
 
+    /**
+     * Processes the frame and determines where the TSE is
+     * @param input Frame from the camera that is used to determine where the TSE is
+     * @return The input image with annotated rectangles to show on the camera preview screen
+     */
     @Override
     public Mat processFrame(Mat input)
     {
@@ -98,15 +104,28 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
         return input;
     }
 
+    /**
+     * Returns the averages of each of the three regions in an ArrayList
+     * @return The averages
+     */
     public ArrayList<Integer> getAnalysis()
     {
         return averages;
     }
 
+    /**
+     * Returns the average of the specified region
+     * @param index Specified region
+     * @return The average
+     */
     public Integer getAnalysis(int index) {
         return averages.get(index);
     }
 
+    /**
+     * Returns the position of the TSE
+     * @return The position of the TSE
+     */
     public ElementPosition getPosition() {
         return position;
     }
