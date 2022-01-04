@@ -22,12 +22,12 @@ public class Carousel extends Subsystem {
 
     ElapsedTime carouselMotorTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
-    private DcMotorEx duckMotor;
+    private DcMotorEx carouselMotor;
 
     public Carousel(HardwareMap hwMap) {
-        duckMotor = hwMap.get(DcMotorEx.class, "duck");
-        duckMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        duckMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        carouselMotor = hwMap.get(DcMotorEx.class, "duck");
+        carouselMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        carouselMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     public void determineCarouselPower(boolean carouselForward, boolean carouselBackward) {
@@ -35,11 +35,11 @@ public class Carousel extends Subsystem {
             case SETUP:
                 if (carouselForward) {
                     carouselMotorTimer.reset();
-                    duckMotor.setDirection(DcMotorEx.Direction.FORWARD);
+                    carouselMotor.setDirection(DcMotorEx.Direction.FORWARD);
                     carouselState = CarouselState.START;
                 } else if (carouselBackward) {
                     carouselMotorTimer.reset();
-                    duckMotor.setDirection(DcMotorEx.Direction.REVERSE);
+                    carouselMotor.setDirection(DcMotorEx.Direction.REVERSE);
                     carouselState = CarouselState.START;
                 }
                 break;
@@ -63,6 +63,6 @@ public class Carousel extends Subsystem {
 
     @Override
     public void runMotorsAndServos() {
-        duckMotor.setVelocity(carouselVelocity);
+        carouselMotor.setVelocity(carouselVelocity);
     }
 }
