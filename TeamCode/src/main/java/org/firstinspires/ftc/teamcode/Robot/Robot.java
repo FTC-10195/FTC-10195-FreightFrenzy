@@ -12,6 +12,9 @@ public class Robot {
     Drivetrain drivetrain;
     Carousel carousel;
     Intake intake;
+
+    // Lights lights
+
     private Subsystem[] subsystems;
 
     public void init(HardwareMap hwMap) {
@@ -23,7 +26,9 @@ public class Robot {
         this.carousel = new Carousel(hwMap);
         this.intake = new Intake(hwMap);
 
-        this.subsystems = new Subsystem[] {drivetrain, carousel, intake};
+        // this.lights = new Lights(hwMap);
+
+        this.subsystems = new Subsystem[] {drivetrain, carousel, intake /*, lights*/};
     }
 
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
@@ -31,6 +36,7 @@ public class Robot {
         drivetrain.teleopDrive(leftX, leftY, rightX, slowMode);
         carousel.determineCarouselPower(duckForward, duckBackward);
         intake.manualIntake(intakeForward, intakeBackward);
+        // lights logic
         runMotorsAndServos();
     }
 
