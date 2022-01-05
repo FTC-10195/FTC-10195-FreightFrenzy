@@ -20,6 +20,10 @@ public class Intake extends Subsystem {
         intakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
+    public void drive(boolean intakeForward, boolean intakeBackward) {
+        manualIntake(intakeForward, intakeBackward);
+    }
+
     public void manualIntake(boolean intakeForward, boolean intakeBackward) {
         if (intakeForward && System.currentTimeMillis() - intakeLastPressed > cooldown) {
             intakeLastPressed = System.currentTimeMillis();

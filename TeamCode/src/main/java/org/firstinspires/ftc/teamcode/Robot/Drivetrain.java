@@ -35,6 +35,10 @@ public class Drivetrain extends Subsystem {
         br.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
+    public void drive(double strafe, double straight, double turn, double slowMode) {
+        teleopDrive(strafe, straight, turn, slowMode);
+    }
+
     public void teleopDrive(double strafe, double straight, double turn, double slowMode) {
         /*
         Left joystick to move forward/backward/left/right, right joystick to turn

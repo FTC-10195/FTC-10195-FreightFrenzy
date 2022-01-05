@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Carousel extends Subsystem {
-    public enum CarouselState {
-        SETUP,
+    private enum CarouselState {
         START,
+        NORMAL,
         SPEED
     }
 
-    private CarouselState carouselState = CarouselState.SETUP;
+    private CarouselState carouselState = CarouselState.START;
 
     public static int carouselStartTime = 1300;
     public static int carouselSpeedTime = 600;
@@ -30,20 +30,24 @@ public class Carousel extends Subsystem {
         carouselMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
+    public void drive(boolean carouselForward, boolean carouselBackward) {
+        determineCarouselPower(carouselForward, carouselBackward);
+    }
+
     public void determineCarouselPower(boolean carouselForward, boolean carouselBackward) {
         switch (carouselState) {
-            case SETUP:
+            case START:
                 if (carouselForward) {
                     carouselMotorTimer.reset();
                     carouselMotor.setDirection(DcMotorEx.Direction.FORWARD);
-                    carouselState = CarouselState.START;
+                    carouselState = CarouselState.NORMAL;
                 } else if (carouselBackward) {
                     carouselMotorTimer.reset();
                     carouselMotor.setDirection(DcMotorEx.Direction.REVERSE);
-                    carouselState = CarouselState.START;
+                    carouselState = CarouselState.NORMAL;
                 }
                 break;
-            case START:
+            case NORMAL:
                 carouselVelocity = carouselNormalVelocity;
                 if (carouselMotorTimer.time() > carouselStartTime) {
                     carouselMotorTimer.reset();
@@ -55,7 +59,7 @@ public class Carousel extends Subsystem {
                 if (carouselMotorTimer.time() > carouselSpeedTime) {
                     carouselMotorTimer.reset();
                     carouselVelocity = 0;
-                    carouselState = CarouselState.SETUP;
+                    carouselState = CarouselState.START;
                 }
                 break;
         }

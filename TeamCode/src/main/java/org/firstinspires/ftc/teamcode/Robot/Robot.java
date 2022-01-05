@@ -12,7 +12,7 @@ public class Robot {
     Drivetrain drivetrain;
     Carousel carousel;
     Intake intake;
-
+    Lift lift;
     // Lights lights
 
     private Subsystem[] subsystems;
@@ -32,10 +32,12 @@ public class Robot {
     }
 
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
-                      boolean duckBackward, boolean intakeForward, boolean intakeBackward) {
-        drivetrain.teleopDrive(leftX, leftY, rightX, slowMode);
-        carousel.determineCarouselPower(duckForward, duckBackward);
-        intake.manualIntake(intakeForward, intakeBackward);
+                      boolean duckBackward, boolean intakeForward, boolean intakeBackward,
+                      boolean liftUp, boolean liftDown) {
+        drivetrain.drive(leftX, leftY, rightX, slowMode);
+        carousel.drive(duckForward, duckBackward);
+        intake.drive(intakeForward, intakeBackward);
+        lift.drive(liftUp, liftDown);
         // lights logic
         runMotorsAndServos();
     }
