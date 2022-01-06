@@ -25,6 +25,7 @@ public class Robot {
         this.drivetrain = new Drivetrain(hwMap);
         this.carousel = new Carousel(hwMap);
         this.intake = new Intake(hwMap);
+        // this.lift = new Lift(hwMap);
         // this.lights = new Lights(hwMap);
 
         this.subsystems = new Subsystem[] {drivetrain, carousel, intake /*, lights*/};
@@ -36,7 +37,7 @@ public class Robot {
         drivetrain.drive(leftX, leftY, rightX, slowMode);
         carousel.drive(duckForward, duckBackward);
         intake.drive(intakeForward, intakeBackward);
-        lift.drive(liftUp, liftDown);
+        // lift.drive(liftUp, liftDown);
         // lights logic
         subsystemLoop();
     }
