@@ -66,7 +66,7 @@ public class Carousel extends Subsystem {
     }
 
     @Override
-    public void runMotorsAndServos() {
+    public void subsystemLoop() {
         carouselMotor.setVelocity(carouselVelocity);
     }
 }

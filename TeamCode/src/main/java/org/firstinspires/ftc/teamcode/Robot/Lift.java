@@ -45,7 +45,7 @@ public class Lift extends Subsystem {
     }
 
     @Override
-    public void runMotorsAndServos() {
+    public void subsystemLoop() {
         lift.setPower(liftPower);
     }
 }

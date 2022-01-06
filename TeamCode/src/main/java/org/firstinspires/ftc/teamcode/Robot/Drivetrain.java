@@ -80,7 +80,7 @@ public class Drivetrain extends Subsystem {
     }
 
     @Override
-    public void runMotorsAndServos() {
+    public void subsystemLoop() {
         fl.setPower(flPower);
         fr.setPower(frPower);
         bl.setPower(blPower);

@@ -22,7 +22,7 @@ public class Lights extends Subsystem {
     }
 
     @Override
-    public void runMotorsAndServos() {
+    public void subsystemLoop() {
         lights.setPattern(pattern);
     }
 }

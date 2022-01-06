@@ -45,7 +45,7 @@ public class Intake extends Subsystem {
     }
 
     @Override
-    public void runMotorsAndServos() {
+    public void subsystemLoop() {
         intakeMotor.setPower(intakePower);
     }
 }
