@@ -3,21 +3,33 @@ package org.firstinspires.ftc.teamcode.Robot;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import java.util.List;
 
 @Config
 public class Robot {
     FtcDashboard dashboard;
+
+    List<LynxModule> allHubs;
+
     TelemetryPacket packet;
     Drivetrain drivetrain;
     Carousel carousel;
     Intake intake;
-    Lift lift;
-    // Lights lights
+    // Lift lift;
+    // Lights lights;
 
     private Subsystem[] subsystems;
 
     public void init(HardwareMap hwMap) {
+        // Manual bulk caching in order to save time on sensor/motor reads
+        allHubs = hwMap.getAll(LynxModule.class);
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         this.dashboard = FtcDashboard.getInstance();
         this.packet = new TelemetryPacket();
 
@@ -43,6 +55,11 @@ public class Robot {
     }
 
     private void subsystemLoop() {
+        // Clearing bulk cache as required by manual bulk caching
+        for (LynxModule module : allHubs) {
+            module.clearBulkCache();
+        }
+
         for (Subsystem subsystem : subsystems) {
             subsystem.subsystemLoop();
         }
