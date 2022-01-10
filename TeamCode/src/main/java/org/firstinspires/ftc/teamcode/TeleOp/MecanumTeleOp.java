@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 @TeleOp(name = "Mecanum TeleOp", group = "1")
 public class MecanumTeleOp extends LinearOpMode {
@@ -20,7 +20,7 @@ public class MecanumTeleOp extends LinearOpMode {
     }
 
     public void initRobot(Robot robot) {
-        robot.init(hardwareMap, true);
+        robot.init(hardwareMap);
     }
 
     public void mainLoop(Robot robot) {
@@ -32,7 +32,9 @@ public class MecanumTeleOp extends LinearOpMode {
                 gamepad1.right_bumper,
                 gamepad1.left_bumper,
                 gamepad1.a,
-                gamepad1.b
+                gamepad1.b,
+                gamepad1.dpad_up || gamepad2.dpad_up,
+                gamepad1.dpad_down || gamepad2.dpad_down
         );
     }
 }
