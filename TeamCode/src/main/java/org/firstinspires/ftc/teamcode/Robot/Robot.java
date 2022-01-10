@@ -24,7 +24,7 @@ public class Robot {
     private Subsystem[] subsystems;
 
     public void init(HardwareMap hwMap) {
-        // Manual bulk caching in order to save time on sensor/motor reads
+        // Manual bulk caching in order to save time on encoder reads
         allHubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : allHubs) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
