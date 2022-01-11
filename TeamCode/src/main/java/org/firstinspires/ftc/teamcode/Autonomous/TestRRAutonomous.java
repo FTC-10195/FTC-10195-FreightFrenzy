@@ -6,10 +6,10 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Robot.Lift;
 
 /**
  * This opmode explains how you follow multiple trajectories in succession, asynchronously. This
@@ -57,8 +57,8 @@ public class TestRRAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Lift lift = new Lift(hardwareMap);
         SampleMecanumDrive wildWing = new SampleMecanumDrive(hardwareMap);
+        Lift lift = new Lift(hardwareMap);
 
         // Set the initial pose of the robot
         wildWing.setPoseEstimate(startPose);
@@ -131,7 +131,6 @@ public class TestRRAutonomous extends LinearOpMode {
             }
 
             wildWing.update();
-            lift.update();
 
             Pose2d poseEstimate = wildWing.getPoseEstimate();
 
@@ -139,21 +138,6 @@ public class TestRRAutonomous extends LinearOpMode {
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
-        }
-    }
-
-    // Assume we have a hardware class called lift
-    // Lift uses a PID controller to maintain its height
-    // Thus, update() must be called in a loop
-    class Lift {
-        public Lift(HardwareMap hardwareMap) {
-            // Beep boop this is the the constructor for the lift
-            // Assume this sets up the lift hardware
-        }
-
-        public void update() {
-            // Beep boop this is the lift update function
-            // Assume this runs some PID controller for the lift
         }
     }
 }
