@@ -32,6 +32,16 @@ public class FreightDetector extends Subsystem {
         return hsvValues;
     }
 
+    public boolean freightDetected() {
+        // if some condition is met then return true
+        // TODO: add condition
+        if (true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void subsystemLoop() {
 
