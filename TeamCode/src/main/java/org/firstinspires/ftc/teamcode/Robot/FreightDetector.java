@@ -35,7 +35,7 @@ public class FreightDetector extends Subsystem {
     public boolean freightDetected() {
         // if some condition is met then return true
         // TODO: add condition
-        if (true) {
+        if (getHSVValues()[0] > 200) {
             return true;
         } else {
             return false;
