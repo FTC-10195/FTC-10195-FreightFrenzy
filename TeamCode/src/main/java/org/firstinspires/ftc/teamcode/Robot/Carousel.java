@@ -13,8 +13,8 @@ public class Carousel extends Subsystem {
 
     private CarouselState carouselState = CarouselState.START;
 
-    public static int carouselStartTime = 1300;
-    public static int carouselSpeedTime = 600;
+    public static int carouselStartTime = 1100;
+    public static int carouselSpeedTime = 500;
     public static int carouselNormalVelocity = 600;
     public static int carouselSpeedVelocity = 4000;
 
