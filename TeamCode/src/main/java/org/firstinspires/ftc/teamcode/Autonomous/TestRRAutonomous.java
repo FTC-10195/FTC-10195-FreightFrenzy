@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Robot.Lift;
+import org.firstinspires.ftc.teamcode.RoadRunner.drive.AutoDrivetrain;
+import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 /**
  * This opmode explains how you follow multiple trajectories in succession, asynchronously. This
@@ -57,24 +57,25 @@ public class TestRRAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive wildWing = new SampleMecanumDrive(hardwareMap);
-        Lift lift = new Lift(hardwareMap);
+        AutoDrivetrain drive = new AutoDrivetrain(hardwareMap);
+        Robot wildWing = new Robot();
+        wildWing.init(hardwareMap);
 
         // Set the initial pose of the robot
-        wildWing.setPoseEstimate(startPose);
+        drive.setPoseEstimate(startPose);
 
-        Trajectory placePreloadedBlock = wildWing.trajectoryBuilder(startPose)
+        Trajectory placePreloadedBlock = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(0, 38, Math.toRadians(-120)))
                 .build();
 
-        Trajectory cycle = wildWing.trajectoryBuilder(placePreloadedBlock.end(), true)
+        Trajectory cycle = drive.trajectoryBuilder(placePreloadedBlock.end(), true)
                 .splineToSplineHeading(new Pose2d(30, 65.5, Math.toRadians(180)), Math.toRadians(0))
                 .lineTo(new Vector2d(42, 65.5))
                 .lineTo(new Vector2d(30, 65.5))
                 .splineTo(new Vector2d(0, 38), Math.toRadians(-120))
                 .build();
 
-        Trajectory parkInWarehouse = wildWing.trajectoryBuilder(cycle.end(), true)
+        Trajectory parkInWarehouse = drive.trajectoryBuilder(cycle.end(), true)
                 .splineToSplineHeading(new Pose2d(30, 65.5, Math.toRadians(180)), Math.toRadians(0))
                 .lineTo(new Vector2d(42, 65.5))
                 .build();
@@ -85,13 +86,13 @@ public class TestRRAutonomous extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        wildWing.followTrajectoryAsync(placePreloadedBlock);
+        drive.followTrajectoryAsync(placePreloadedBlock);
 
         while (opModeIsActive() && !isStopRequested()) {
             switch (currentState) {
                 case PLACE_PRELOADED_BLOCK:
                     // TODO: put lift to correct height
-                    if (!wildWing.isBusy()) {
+                    if (!drive.isBusy()) {
                         currentState = State.DELIVER_CARGO;
                         waitTimer.reset();
                     }
@@ -100,7 +101,7 @@ public class TestRRAutonomous extends LinearOpMode {
                 case CYCLE:
                     // TODO: set intake power to 1
                     // TODO: if there's a block inside the basket, reverse intake
-                    if (!wildWing.isBusy()) {
+                    if (!drive.isBusy()) {
                         currentState = State.DELIVER_CARGO;
                     }
                     break;
@@ -112,16 +113,16 @@ public class TestRRAutonomous extends LinearOpMode {
                         // TODO: set intake power to 1
                         if (currentCycle <= numCycles) {
                             currentState = State.CYCLE;
-                            wildWing.followTrajectoryAsync(cycle);
+                            drive.followTrajectoryAsync(cycle);
                         } else {
                             currentState = State.PARK_IN_WAREHOUSE;
-                            wildWing.followTrajectoryAsync(parkInWarehouse);
+                            drive.followTrajectoryAsync(parkInWarehouse);
                         }
                     }
                     break;
 
                 case PARK_IN_WAREHOUSE:
-                    if (!wildWing.isBusy()) {
+                    if (!drive.isBusy()) {
                         currentState = State.IDLE;
                     }
                     break;
@@ -130,9 +131,9 @@ public class TestRRAutonomous extends LinearOpMode {
                     break;
             }
 
-            wildWing.update();
+            drive.update();
 
-            Pose2d poseEstimate = wildWing.getPoseEstimate();
+            Pose2d poseEstimate = drive.getPoseEstimate();
 
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
