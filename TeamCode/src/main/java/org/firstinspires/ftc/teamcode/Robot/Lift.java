@@ -28,11 +28,11 @@ public class Lift extends Subsystem {
 
     private void manualLift(boolean liftUp, boolean liftDown) {
         if (liftUp) {
-            lift.setPower(1);
+            liftPower = 1;
         } else if (liftDown) {
-            lift.setPower(-1);
+            liftPower = -1;
         } else {
-            lift.setPower(0);
+            liftPower = 0;
         }
     }
 
