@@ -15,9 +15,9 @@ public class Robot {
     List<LynxModule> allHubs;
 
     TelemetryPacket packet;
-    Drivetrain drivetrain;
-    Carousel carousel;
-    Intake intake;
+    public Drivetrain drivetrain;
+    public Carousel carousel;
+    public Intake intake;
     // Lift lift;
     // Lights lights;
 

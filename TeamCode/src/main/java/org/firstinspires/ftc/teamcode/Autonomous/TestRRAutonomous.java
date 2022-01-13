@@ -101,6 +101,13 @@ public class TestRRAutonomous extends LinearOpMode {
                 case CYCLE:
                     // TODO: set intake power to 1
                     // TODO: if there's a block inside the basket, reverse intake
+
+                    if (/*wildWing.freightDetector.freightDetected()*/ false) {
+                        wildWing.intake.setPower(-1);
+                    } else {
+                        wildWing.intake.setPower(1);
+                    }
+
                     if (!drive.isBusy()) {
                         currentState = State.DELIVER_CARGO;
                     }
