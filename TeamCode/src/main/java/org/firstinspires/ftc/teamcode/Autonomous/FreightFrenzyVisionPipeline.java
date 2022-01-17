@@ -13,49 +13,61 @@ import java.util.Collections;
 
 public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
 
+    /*
+     * An enum that defines the positions of the TSE
+     */
     public enum ElementPosition {
         LEFT,
         MIDDLE,
         RIGHT
     }
 
-    // Some colour constants
+    /*
+     * Colour constants
+     */
     static final Scalar BLUE = new Scalar(0, 0, 255);
 
-    // The values for the regions that the program detects in
-    public static final Point[] Region1 = {new Point(), new Point()};
-    public static final Point[] Region2 = {new Point(), new Point()};
-    public static final Point[] Region3 = {new Point(), new Point()};
+    /*
+     * The values for the regions that the program detects in
+     * TODO: Tune the positions and sizes of the regions
+     */
+    public static final Point[] Region1 = {new Point(109, 98), new Point(149, 138)};
+    public static final Point[] Region2 = {new Point(181, 98), new Point(221, 138)};
+    public static final Point[] Region3 = {new Point(253, 98), new Point(293, 138)};
 
-    ArrayList<Mat> RegionGreen;
-    Mat green = new Mat();
+    /*
+     * Working variables
+     */
+    ArrayList<Mat> RegionCb;
+    Mat YCrCb = new Mat();
+    Mat Cb = new Mat();
     ArrayList<Integer> averages;
 
     // Volatile since accessed by OpMode thread without synchronization
     private volatile ElementPosition position = ElementPosition.LEFT;
 
     /**
-     * Extracts the green channel from the input frame
+     * Takes the input and converts it into YCrCb colour space, then extracts the Cb channel to the 'Cb' matrix
      * @param input The input frame
      */
-    void inputToGreen(Mat input)
+    void inputToCb(Mat input)
     {
-        // Extracts the channel with index 2 (green) from input frame, which is added to the green Mat
-        Core.extractChannel(input, green, 2);
+        Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+        Core.extractChannel(YCrCb, Cb, 2);
     }
 
     /**
-     * Initialises the pipeline
+     * Initialises the pipeline and adds all of the submats to the RegionCb ArrayList
      * @param firstFrame First captured frame
      */
     @Override
     public void init(Mat firstFrame)
     {
-        inputToGreen(firstFrame);
+        inputToCb(firstFrame);
 
-        RegionGreen.add(green.submat(new Rect(Region1[0], Region1[1])));
-        RegionGreen.add(green.submat(new Rect(Region2[0], Region2[1])));
-        RegionGreen.add(green.submat(new Rect(Region3[0], Region3[1])));
+        RegionCb.add(Cb.submat(new Rect(Region1[0], Region1[1])));
+        RegionCb.add(Cb.submat(new Rect(Region2[0], Region2[1])));
+        RegionCb.add(Cb.submat(new Rect(Region3[0], Region3[1])));
     }
 
     /**
@@ -66,10 +78,18 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input)
     {
-        averages.add((int) Core.mean(RegionGreen.get(0)).val[0]);
-        averages.add((int) Core.mean(RegionGreen.get(1)).val[0]);
-        averages.add((int) Core.mean(RegionGreen.get(2)).val[0]);
+        /*
+         * Computes the average pixel value of each submat region and adds them to the
+         * average ArrayList
+         */
+        averages.add((int) Core.mean(RegionCb.get(0)).val[0]);
+        averages.add((int) Core.mean(RegionCb.get(1)).val[0]);
+        averages.add((int) Core.mean(RegionCb.get(2)).val[0]);
 
+        /*
+         * Draws rectangles on the screen denoting the locations of the sample regions; used for visual
+         * aid
+         */
         Imgproc.rectangle(
             input, // Buffer to draw on
             Region1[0], // First point which defines the rectangle
@@ -89,7 +109,19 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
             BLUE, // The color the rectangle is drawn in
             2); // Thickness of the rectangle lines
 
+        /*
+         * Determines the region with the maximum pixel value by finding the maximum value in the averages
+         * ArrayList
+         */
         int maxRegion = averages.indexOf(Collections.max(averages));
+
+        /*
+         * Based on the region that has the maximum pixel value, the position of the TSE is determined
+         * accordingly
+         *
+         * e.g. If the first region (region at index 0) has the maximum pixel value, then the position
+         * of the TSE is the left
+         */
         switch (maxRegion) {
             case 0:
             default:
@@ -101,6 +133,10 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
                 position = ElementPosition.RIGHT;
                 break;
         }
+
+        /*
+         * Returns the input buffer to the viewport with the annotations above added
+         */
         return input;
     }
 
