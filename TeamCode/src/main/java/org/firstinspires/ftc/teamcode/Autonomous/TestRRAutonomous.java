@@ -33,8 +33,6 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
 @Autonomous(group = "advanced")
 public class TestRRAutonomous extends LinearOpMode {
 
-    // This enum defines our "state"
-    // This is essentially just defines the possible steps our program will take
     enum State {
         PLACE_PRELOADED_BLOCK,
         CYCLE,
@@ -45,9 +43,9 @@ public class TestRRAutonomous extends LinearOpMode {
 
     // Configuration parameters
     public static int numCycles = 4;
-    public static double waitTime = 0.5;
+    public static double depositTime = 0.5;
 
-    // The current cycle that the robot is running; used for
+    // The current cycle that the robot is running
     private int currentCycle = 0;
 
     State currentState = State.PLACE_PRELOADED_BLOCK;
@@ -93,6 +91,7 @@ public class TestRRAutonomous extends LinearOpMode {
                 case PLACE_PRELOADED_BLOCK:
                     // TODO: put lift to correct height
                     if (!drive.isBusy()) {
+                        // TODO: set servo to deposit position
                         currentState = State.DELIVER_CARGO;
                         waitTimer.reset();
                     }
@@ -109,12 +108,14 @@ public class TestRRAutonomous extends LinearOpMode {
                     }
 
                     if (!drive.isBusy()) {
+                        // TODO: set servo to deposit position
                         currentState = State.DELIVER_CARGO;
+                        waitTimer.reset();
                     }
                     break;
 
                 case DELIVER_CARGO:
-                    if (waitTimer.seconds() > waitTime) {
+                    if (waitTimer.seconds() > depositTime) {
                         currentCycle++;
                         // TODO: set the basket servo to the collection position
                         // TODO: set intake power to 1
