@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Lift extends Subsystem {
     private enum LiftState {
@@ -14,9 +15,11 @@ public class Lift extends Subsystem {
     private double liftPower;
 
     private DcMotorEx lift;
+    public Servo basket;
 
     public Lift(HardwareMap hwMap) {
         lift = hwMap.get(DcMotorEx.class, "lift");
+        basket = hwMap.get(Servo.class, "basket");
         lift.setDirection(DcMotorEx.Direction.FORWARD);
         lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
