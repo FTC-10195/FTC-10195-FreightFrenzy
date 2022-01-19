@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -50,7 +49,6 @@ import java.util.concurrent.TimeUnit;
  * Displays the first pattern upon init.
  */
 @TeleOp(name="BlinkinExample")
-@Disabled
 public class SampleRevBlinkinLedDriver extends OpMode {
 
     /*
