@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Lift extends Subsystem {
     private enum LiftState {
         START,
@@ -11,6 +13,9 @@ public class Lift extends Subsystem {
         STOP
     }
     private LiftState liftState = LiftState.START;
+
+    public static int allianceHub3;
+    public static int sharedHub;
 
     private double liftPower;
 
@@ -25,8 +30,9 @@ public class Lift extends Subsystem {
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public void drive(boolean liftUp, boolean liftDown) {
+    public void drive(boolean liftUp, boolean liftDown, boolean automaticLift) {
         manualLift(liftUp, liftDown);
+        automaticLift(automaticLift);
     }
 
     private void manualLift(boolean liftUp, boolean liftDown) {
@@ -36,6 +42,22 @@ public class Lift extends Subsystem {
             liftPower = -1;
         } else {
             liftPower = 0;
+        }
+    }
+
+    private void automaticLift(boolean automaticLift) {
+        switch (liftState) {
+            case START:
+                if (automaticLift) {
+
+                }
+                break;
+
+            case LIFT:
+                break;
+
+            case STOP:
+                break;
         }
     }
 
