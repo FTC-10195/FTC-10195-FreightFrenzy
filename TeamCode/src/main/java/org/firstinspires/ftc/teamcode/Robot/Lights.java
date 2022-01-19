@@ -10,8 +10,8 @@ public class Lights extends Subsystem {
     private BlinkinPattern pattern;
 
     public final BlinkinPattern FREIGHT_DETECTED = BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-    public final BlinkinPattern RED_ALLIANCE = BlinkinPattern.LIGHT_CHASE_RED;
-    public final BlinkinPattern BLUE_ALLIANCE = BlinkinPattern.LIGHT_CHASE_BLUE;
+    public final BlinkinPattern RED_ALLIANCE = BlinkinPattern.RAINBOW_LAVA_PALETTE;
+    public final BlinkinPattern BLUE_ALLIANCE = BlinkinPattern.RAINBOW_OCEAN_PALETTE;
 
     public Lights(HardwareMap hwMap) {
         lights = hwMap.get(RevBlinkinLedDriver.class, "lights");
