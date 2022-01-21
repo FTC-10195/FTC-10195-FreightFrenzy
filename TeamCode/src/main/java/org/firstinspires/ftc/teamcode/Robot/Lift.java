@@ -35,10 +35,12 @@ public class Lift extends Subsystem {
         HIGH,
         SHARED;
 
-        private static DepositLocation[] vals = values();
+        private static final DepositLocation[] vals = values();
+
         private DepositLocation next() {
             return vals[(this.ordinal() + 1) % vals.length];
         }
+
         private DepositLocation previous() {
             return vals[(this.ordinal() - 1) % vals.length];
         }
@@ -123,6 +125,7 @@ public class Lift extends Subsystem {
                 if (getPosition() < 50) {
                     liftState = LiftState.STOP;
                 }
+                break;
 
             case STOP:
                 liftPower = 0;
