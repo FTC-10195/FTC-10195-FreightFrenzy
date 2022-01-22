@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 public class Intake extends Subsystem {
     public static int cooldown = 250;
@@ -19,11 +14,7 @@ public class Intake extends Subsystem {
 
     private DcMotorEx intakeMotor;
 
-    FreightDetector freightDetector;
-
     public Intake(HardwareMap hwMap) {
-        freightDetector = new FreightDetector(hwMap);
-
         intakeMotor = hwMap.get(DcMotorEx.class, "intake");
         intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
         intakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -31,10 +22,9 @@ public class Intake extends Subsystem {
 
     public void drive(boolean intakeForward, boolean intakeBackward) {
         manualIntake(intakeForward, intakeBackward);
-        reverseIntake();
     }
 
-    private void manualIntake(boolean intakeForward, boolean intakeBackward) {
+    public void manualIntake(boolean intakeForward, boolean intakeBackward) {
         if (intakeForward && System.currentTimeMillis() - intakeLastPressed > cooldown) {
             intakeLastPressed = System.currentTimeMillis();
             intakeOnForward = !intakeOnForward;
@@ -54,12 +44,6 @@ public class Intake extends Subsystem {
         }
     }
 
-    private void reverseIntake() {
-        if (freightDetector.freightDetected()) {
-            intakePower = -1;
-        }
-    }
-
     public void setPower(double power) {
         intakeMotor.setPower(power);
     }
@@ -67,35 +51,5 @@ public class Intake extends Subsystem {
     @Override
     public void subsystemLoop() {
         intakeMotor.setPower(intakePower);
-    }
-}
-
-class FreightDetector {
-    public static float gain = 2;
-
-    NormalizedColorSensor freightDetector;
-
-    public FreightDetector(HardwareMap hwMap) {
-        freightDetector = hwMap.get(NormalizedColorSensor.class, "freightDetector");
-        freightDetector.setGain(gain);
-        if (freightDetector instanceof SwitchableLight) {
-            ((SwitchableLight) freightDetector).enableLight(true);
-        }
-    }
-
-    public NormalizedRGBA getValues() {
-        return freightDetector.getNormalizedColors();
-    }
-
-    public float[] getHSVValues() {
-        float[] hsvValues = new float[3];
-        Color.colorToHSV(getValues().toColor(), hsvValues);
-        return hsvValues;
-    }
-
-    public boolean freightDetected() {
-        // if some condition is met then return true
-        // TODO: add condition
-        return getHSVValues()[0] > 200;
     }
 }
