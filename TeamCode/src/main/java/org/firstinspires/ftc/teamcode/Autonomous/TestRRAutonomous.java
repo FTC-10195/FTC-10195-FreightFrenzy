@@ -57,7 +57,7 @@ public class TestRRAutonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         AutoDrivetrain drive = new AutoDrivetrain(hardwareMap);
         Robot wildWing = new Robot();
-        wildWing.init(hardwareMap);
+        wildWing.init(hardwareMap, Robot.Alliance.BLUE);
 
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);

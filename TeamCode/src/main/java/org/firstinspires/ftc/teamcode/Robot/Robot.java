@@ -10,6 +10,12 @@ import java.util.List;
 
 @Config
 public class Robot {
+    public enum Alliance {
+        RED,
+        BLUE
+    }
+    public static Alliance alliance;
+
     FtcDashboard dashboard;
 
     List<LynxModule> allHubs;
@@ -23,7 +29,7 @@ public class Robot {
 
     private Subsystem[] subsystems;
 
-    public void init(HardwareMap hwMap) {
+    public void init(HardwareMap hwMap, Alliance alliance) {
         // Manual bulk caching in order to save time on encoder reads
         allHubs = hwMap.getAll(LynxModule.class);
         for (LynxModule module : allHubs) {

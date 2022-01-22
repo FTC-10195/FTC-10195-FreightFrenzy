@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 public class FreightDetector extends Subsystem {
     public static float gain = 2;
 
-    NormalizedColorSensor freightDetector;
+    static NormalizedColorSensor freightDetector;
 
     public FreightDetector(HardwareMap hwMap) {
         freightDetector = hwMap.get(NormalizedColorSensor.class, "freightDetector");

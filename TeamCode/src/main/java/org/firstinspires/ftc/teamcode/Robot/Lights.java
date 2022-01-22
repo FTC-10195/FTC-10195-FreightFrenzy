@@ -13,12 +13,25 @@ public class Lights extends Subsystem {
     public final BlinkinPattern RED_ALLIANCE = BlinkinPattern.RAINBOW_LAVA_PALETTE;
     public final BlinkinPattern BLUE_ALLIANCE = BlinkinPattern.RAINBOW_OCEAN_PALETTE;
 
+    FreightDetector freightDetector;
+
     public Lights(HardwareMap hwMap) {
         lights = hwMap.get(RevBlinkinLedDriver.class, "lights");
+        freightDetector = new FreightDetector(hwMap);
     }
 
     public void setPattern(BlinkinPattern pattern) {
         this.pattern = pattern;
+    }
+
+    public void freightDetected() {
+        if (freightDetector.freightDetected()) {
+            lights.setPattern(FREIGHT_DETECTED);
+        } else if (Robot.alliance == Robot.Alliance.RED) {
+            lights.setPattern(RED_ALLIANCE);
+        } else {
+            lights.setPattern(BLUE_ALLIANCE);
+        }
     }
 
     @Override

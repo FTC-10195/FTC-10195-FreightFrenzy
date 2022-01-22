@@ -20,7 +20,7 @@ public class MecanumTeleOp extends LinearOpMode {
     }
 
     public void initRobot(Robot robot) {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, Robot.Alliance.BLUE);
     }
 
     public void mainLoop(Robot robot) {
