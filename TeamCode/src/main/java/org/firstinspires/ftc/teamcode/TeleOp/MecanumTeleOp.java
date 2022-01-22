@@ -5,22 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
-@TeleOp(name = "Mecanum TeleOp", group = "1")
+@TeleOp(name = "Mecanum TeleOp", group = "2")
 public class MecanumTeleOp extends LinearOpMode {
 
-    private Robot wildWing = new Robot();
+    protected Robot wildWing = new Robot();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initRobot(wildWing);
+        initRobot(wildWing, Robot.Alliance.BLUE);
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             mainLoop(wildWing);
         }
     }
 
-    public void initRobot(Robot robot) {
-        robot.init(hardwareMap, Robot.Alliance.BLUE);
+    public void initRobot(Robot robot, Robot.Alliance alliance) {
+        robot.init(hardwareMap, alliance);
     }
 
     public void mainLoop(Robot robot) {
