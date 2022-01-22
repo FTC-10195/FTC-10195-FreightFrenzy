@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -35,14 +34,14 @@ public class Lift extends Subsystem {
         HIGH,
         SHARED;
 
-        private static final DepositLocation[] vals = values();
+        private static final DepositLocation[] states = values();
 
         private DepositLocation next() {
-            return vals[(this.ordinal() + 1) % vals.length];
+            return states[(this.ordinal() + 1) % states.length];
         }
 
         private DepositLocation previous() {
-            return vals[(this.ordinal() - 1) % vals.length];
+            return states[(this.ordinal() - 1) % states.length];
         }
     }
     private DepositLocation depositLocation = DepositLocation.HIGH;
@@ -120,9 +119,9 @@ public class Lift extends Subsystem {
 
             case RETRACT:
                 lift.setTargetPosition(0);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 liftPower = desiredLiftPower;
                 if (getPosition() < 50) {
+                    resetPosition();
                     liftState = LiftState.STOP;
                 }
                 break;
