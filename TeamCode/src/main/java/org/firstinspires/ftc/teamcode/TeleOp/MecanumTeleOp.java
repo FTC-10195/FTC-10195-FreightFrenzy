@@ -33,8 +33,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 gamepad1.left_bumper,
                 gamepad1.a,
                 gamepad1.b,
-                gamepad1.dpad_up || gamepad2.dpad_up,
-                gamepad1.dpad_down || gamepad2.dpad_down
+                gamepad1.dpad_up || gamepad2.right_bumper,
+                gamepad1.dpad_down || gamepad2.left_bumper,
+                gamepad2.dpad_up,
+                gamepad2.a
         );
     }
 }

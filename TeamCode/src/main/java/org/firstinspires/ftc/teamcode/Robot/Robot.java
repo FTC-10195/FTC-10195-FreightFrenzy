@@ -51,7 +51,7 @@ public class Robot {
 
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
                       boolean duckBackward, boolean intakeForward, boolean intakeBackward,
-                      boolean liftUp, boolean liftDown) {
+                      boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit) {
         drivetrain.drive(leftX, leftY, rightX, slowMode);
         carousel.drive(duckForward, duckBackward);
         intake.drive(intakeForward, intakeBackward);
