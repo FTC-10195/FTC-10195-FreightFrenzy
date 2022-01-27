@@ -136,6 +136,7 @@ public class TestRRAutonomous extends LinearOpMode {
                     break;
 
                 case IDLE:
+                    requestOpModeStop();
                     break;
             }
 
