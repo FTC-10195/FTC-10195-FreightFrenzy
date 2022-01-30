@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 @Config
 public class Lift extends Subsystem {
-    public static int lowLocation = 100;
-    public static int midLocation = 200;
-    public static int highLocation = 300;
+    public static int lowLocation = 600;
+    public static int midLocation = 1300;
+    public static int highLocation = 2000;
     public static int sharedLocation = 150;
     public static double basketDeposit = 0.9;
     public static double basketCollect = 0.5;
