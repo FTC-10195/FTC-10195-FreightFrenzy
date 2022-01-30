@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake extends Subsystem {
     public static int cooldown = 250;
+    public static double desiredIntakePower = 0.45;
 
     private boolean intakeOnForward = false;
     private boolean intakeOnBackward = false;
@@ -36,9 +37,9 @@ public class Intake extends Subsystem {
         }
 
         if (intakeOnForward) {
-            intakePower = 1;
+            intakePower = desiredIntakePower;
         } else if (intakeOnBackward) {
-            intakePower = -1;
+            intakePower = -desiredIntakePower;
         } else {
             intakePower = 0;
         }
