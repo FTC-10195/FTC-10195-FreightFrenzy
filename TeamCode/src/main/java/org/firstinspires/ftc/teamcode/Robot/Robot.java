@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -16,11 +15,8 @@ public class Robot {
     }
     public static Alliance alliance;
 
-    FtcDashboard dashboard;
-
     List<LynxModule> allHubs;
 
-    TelemetryPacket packet;
     public Drivetrain drivetrain;
     public Carousel carousel;
     public Intake intake;
@@ -36,9 +32,6 @@ public class Robot {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        this.dashboard = FtcDashboard.getInstance();
-        this.packet = new TelemetryPacket();
-
         // Set up subsystems
         this.drivetrain = new Drivetrain(hwMap);
         this.carousel = new Carousel(hwMap);
@@ -52,6 +45,7 @@ public class Robot {
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
                       boolean duckBackward, boolean intakeForward, boolean intakeBackward,
                       boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit) {
+        Subsystem.packet = new TelemetryPacket();
         drivetrain.drive(leftX, leftY, rightX, slowMode);
         carousel.drive(duckForward, duckBackward);
         intake.drive(intakeForward, intakeBackward);
@@ -69,5 +63,7 @@ public class Robot {
         for (Subsystem subsystem : subsystems) {
             subsystem.subsystemLoop();
         }
+
+        Subsystem.dashboard.sendTelemetryPacket(Subsystem.packet);
     }
 }

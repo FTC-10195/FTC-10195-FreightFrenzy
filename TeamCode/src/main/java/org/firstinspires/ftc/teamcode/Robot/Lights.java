@@ -17,7 +17,7 @@ public class Lights extends Subsystem {
 
     public Lights(HardwareMap hwMap) {
         lights = hwMap.get(RevBlinkinLedDriver.class, "lights");
-        freightDetector = new FreightDetector(hwMap);
+        freightDetector = new FreightDetector(hwMap, dashboard);
     }
 
     public void setPattern(BlinkinPattern pattern) {

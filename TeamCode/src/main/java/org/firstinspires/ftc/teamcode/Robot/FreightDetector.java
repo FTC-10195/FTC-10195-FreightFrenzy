@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -14,7 +15,7 @@ public class FreightDetector extends Subsystem {
 
     static NormalizedColorSensor freightDetector;
 
-    public FreightDetector(HardwareMap hwMap) {
+    public FreightDetector(HardwareMap hwMap, FtcDashboard dashboard) {
         freightDetector = hwMap.get(NormalizedColorSensor.class, "freightDetector");
         freightDetector.setGain(gain);
         if (freightDetector instanceof SwitchableLight) {
