@@ -14,10 +14,10 @@ public class MeepMeepTesting {
 
         DefaultBotBuilder myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(70, 70, Math.toRadians(360), Math.toRadians(180), 10)
-                .setDimensions(13, 18);
+                .setConstraints(30, 30, Math.toRadians(360), Math.toRadians(180), 10)
+                .setDimensions(16, 18);
 
-        RoadRunnerBotEntity entity = myBot.followTrajectorySequence(onlyCyclesBlue(myBot.build().getDrive()));
+        RoadRunnerBotEntity entity = myBot.followTrajectorySequence(carouselBlue(myBot.build().getDrive()));
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_OFFICIAL)
                 .setDarkMode(true)
@@ -148,6 +148,23 @@ public class MeepMeepTesting {
                 .lineToConstantHeading(new Vector2d(48, 65.5))
                 .strafeLeft(24)
                 .back(12)
+                .build();
+    }
+
+    private static TrajectorySequence carouselBlue(DriveShim drive) {
+        return drive.trajectorySequenceBuilder(new Pose2d(-36, 63, Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(-64, 42), Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(-64, 56, Math.toRadians(-90)))
+                // turn carousel motor on at 300 velocity
+                .waitSeconds(4)
+                // turn carousel motor off
+                .splineToSplineHeading(new Pose2d(-24, 38, Math.toRadians(135)), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(-56, 55, Math.toRadians(90)))
+                // turn intake on
+                .lineTo(new Vector2d(-56, 63))
+                .lineToLinearHeading(new Pose2d(-24, 38, Math.toRadians(135)))
+                .lineToLinearHeading(new Pose2d(-60, 36, Math.toRadians(90)))
                 .build();
     }
 }
