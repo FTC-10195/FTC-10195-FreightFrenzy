@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveShim;
+import com.noahbres.meepmeep.roadrunner.SampleMecanumDrive;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 
@@ -14,10 +15,15 @@ public class MeepMeepTesting {
 
         DefaultBotBuilder myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(30, 30, Math.toRadians(360), Math.toRadians(180), 10)
+                .setConstraints(30, 30, Math.toRadians(360), Math.toRadians(180), 13)
                 .setDimensions(16, 18);
 
+        DefaultBotBuilder partnerBot = new DefaultBotBuilder(meepMeep)
+                .setConstraints(70, 70, Math.toRadians(360), Math.toRadians(360), 10)
+                .setDimensions(13, 18);
+
         RoadRunnerBotEntity entity = myBot.followTrajectorySequence(carouselBlue(myBot.build().getDrive()));
+        RoadRunnerBotEntity entity2 = partnerBot.followTrajectorySequence(onlyCyclesBlue(partnerBot.build().getDrive()));
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_OFFICIAL)
                 .setDarkMode(true)
@@ -162,7 +168,7 @@ public class MeepMeepTesting {
                 .waitSeconds(0.5)
                 .lineToLinearHeading(new Pose2d(-56, 55, Math.toRadians(90)))
                 // turn intake on
-                .lineTo(new Vector2d(-56, 63))
+                .lineTo(new Vector2d(-56, 63), SampleMecanumDrive.getVelocityConstraint(2, Math.toRadians(180), 13))
                 .lineToLinearHeading(new Pose2d(-24, 38, Math.toRadians(135)))
                 .lineToLinearHeading(new Pose2d(-60, 36, Math.toRadians(90)))
                 .build();
