@@ -20,7 +20,7 @@ public class Robot {
     public Drivetrain drivetrain;
     public Carousel carousel;
     public Intake intake;
-    // Lift lift;
+    public Lift lift;
     // Lights lights;
 
     private Subsystem[] subsystems;
@@ -36,7 +36,7 @@ public class Robot {
         this.drivetrain = new Drivetrain(hwMap);
         this.carousel = new Carousel(hwMap);
         this.intake = new Intake(hwMap);
-        // this.lift = new Lift(hwMap);
+        this.lift = new Lift(hwMap);
         // this.lights = new Lights(hwMap);
 
         this.subsystems = new Subsystem[] {drivetrain, carousel, intake /*, lights*/};
@@ -44,12 +44,14 @@ public class Robot {
 
     public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
                       boolean duckBackward, boolean intakeForward, boolean intakeBackward,
-                      boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit) {
+                      boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit,
+                      boolean cancelAutomation, boolean incrementLocation, boolean decrementLocation) {
         Subsystem.packet = new TelemetryPacket();
         drivetrain.drive(leftX, leftY, rightX, slowMode);
         carousel.drive(duckForward, duckBackward);
         intake.drive(intakeForward, intakeBackward);
-        // lift.drive(liftUp, liftDown);
+        lift.drive(liftUp, liftDown, automaticLift, automaticDeposit,
+                cancelAutomation, incrementLocation, decrementLocation);
         // lights logic
         subsystemLoop();
     }
