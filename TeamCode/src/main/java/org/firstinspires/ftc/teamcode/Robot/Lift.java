@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.HashMap;
-
 @Config
 public class Lift extends Subsystem {
     public static int lowLocation = 600;
@@ -29,10 +27,10 @@ public class Lift extends Subsystem {
     private LiftState liftState = LiftState.START;
 
     private enum DepositLocation {
-        LOW,
-        MID,
-        HIGH,
-        SHARED;
+        LOW(lowLocation),
+        MID(midLocation),
+        HIGH(highLocation),
+        SHARED(sharedLocation);
 
         private static final DepositLocation[] states = values();
 
@@ -43,9 +41,14 @@ public class Lift extends Subsystem {
         private DepositLocation previous() {
             return states[(this.ordinal() - 1) % states.length];
         }
+
+        public int ticks;
+
+        DepositLocation(int ticks) {
+            this.ticks = ticks;
+        }
     }
     private DepositLocation depositLocation = DepositLocation.HIGH;
-    private HashMap<DepositLocation, Integer> depositLocations = new HashMap<>();
 
     private boolean previousIncrement = false;
     private boolean previousDecrement = false;
@@ -64,11 +67,6 @@ public class Lift extends Subsystem {
         lift.setDirection(DcMotorEx.Direction.FORWARD);
         lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        depositLocations.put(DepositLocation.LOW, lowLocation);
-        depositLocations.put(DepositLocation.MID, midLocation);
-        depositLocations.put(DepositLocation.HIGH, highLocation);
-        depositLocations.put(DepositLocation.SHARED, sharedLocation);
     }
 
     public void drive(boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit,
@@ -89,7 +87,7 @@ public class Lift extends Subsystem {
     }
 
     private void automaticLift(boolean automaticLift, boolean automaticDeposit, boolean cancelAutomation) {
-        int depositTicks = depositLocations.getOrDefault(depositLocation, highLocation);
+        int depositTicks = depositLocation.ticks;
         switch (liftState) {
             case START:
                 if (automaticLift) {
