@@ -13,22 +13,23 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        DefaultBotBuilder myBot = new DefaultBotBuilder(meepMeep)
+        DefaultBotBuilder blueBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(30, 30, Math.toRadians(360), Math.toRadians(180), 13)
                 .setDimensions(16, 18);
 
-        DefaultBotBuilder partnerBot = new DefaultBotBuilder(meepMeep)
-                .setConstraints(70, 70, Math.toRadians(360), Math.toRadians(360), 10)
-                .setDimensions(13, 18);
+        DefaultBotBuilder redBot = new DefaultBotBuilder(meepMeep)
+                .setConstraints(30, 30, Math.toRadians(360), Math.toRadians(360), 13)
+                .setDimensions(16, 18);
 
-        RoadRunnerBotEntity entity = myBot.followTrajectorySequence(carouselBlue(myBot.build().getDrive()));
-        RoadRunnerBotEntity entity2 = partnerBot.followTrajectorySequence(onlyCyclesBlue(partnerBot.build().getDrive()));
+        RoadRunnerBotEntity blueEntity = blueBot.followTrajectorySequence(carouselBlue(blueBot.build().getDrive()));
+        RoadRunnerBotEntity redEntity = redBot.followTrajectorySequence(carouselRed(redBot.build().getDrive()));
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_OFFICIAL)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(entity)
+                .addEntity(blueEntity)
+                .addEntity(redEntity)
                 .start();
     }
 
@@ -169,8 +170,27 @@ public class MeepMeepTesting {
                 .lineToLinearHeading(new Pose2d(-56, 55, Math.toRadians(90)))
                 // turn intake on
                 .lineTo(new Vector2d(-56, 63), SampleMecanumDrive.getVelocityConstraint(2, Math.toRadians(180), 13))
+                // turn intake off
                 .lineToLinearHeading(new Pose2d(-24, 38, Math.toRadians(135)))
                 .lineToLinearHeading(new Pose2d(-60, 36, Math.toRadians(90)))
+                .build();
+    }
+
+    private static TrajectorySequence carouselRed(DriveShim drive) {
+        return drive.trajectorySequenceBuilder(new Pose2d(-36, -63, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(-64, -42, Math.toRadians(0)), Math.toRadians(180))
+                .lineTo(new Vector2d(-64, -56))
+                // turn carousel motor on at 300 velocity
+                .waitSeconds(4)
+                // turn carousel motor off
+                .splineToSplineHeading(new Pose2d(-24, -38, Math.toRadians(-135)), Math.toRadians(0))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(-56, -55, Math.toRadians(-90)))
+                // turn intake on
+                .lineTo(new Vector2d(-56, -63), SampleMecanumDrive.getVelocityConstraint(2, Math.toRadians(180), 13))
+                // turn intake off
+                .lineToLinearHeading(new Pose2d(-24, -38, Math.toRadians(-135)))
+                .lineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(-90)))
                 .build();
     }
 }

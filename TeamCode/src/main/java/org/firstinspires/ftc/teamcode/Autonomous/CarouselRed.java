@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.RoadRunner.drive.AutoDrivetrain;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 @Config
-@Autonomous(name = "Carousel Blue", group = "1")
-public class CarouselBlue extends LinearOpMode {
+@Autonomous(name = "Carousel Red", group = "1")
+public class CarouselRed extends LinearOpMode {
     enum State {
         GO_TO_CAROUSEL,
         SPIN_CAROUSEL,
@@ -34,7 +34,7 @@ public class CarouselBlue extends LinearOpMode {
     State currentState = State.GO_TO_CAROUSEL;
 
     // Define our start pose
-    Pose2d startPose = new Pose2d(-36, 63, Math.toRadians(-90));
+    Pose2d startPose = new Pose2d(-36, -63, Math.toRadians(-90));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,28 +46,28 @@ public class CarouselBlue extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory carousel = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-64, 42), Math.toRadians(180))
-                .lineToLinearHeading(new Pose2d(-64, 56, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(-64, -42, Math.toRadians(0)), Math.toRadians(180))
+                .lineTo(new Vector2d(-64, -56))
                 .build();
 
         Trajectory deliverPreload = drive.trajectoryBuilder(carousel.end())
-                .lineToLinearHeading(new Pose2d(0, 38, Math.toRadians(-120)))
+                .splineToSplineHeading(new Pose2d(-24, -38, Math.toRadians(-135)), Math.toRadians(0))
                 .build();
 
         Trajectory goToDuck = drive.trajectoryBuilder(deliverPreload.end())
-                .lineToLinearHeading(new Pose2d(-56, 55, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-56, -55, Math.toRadians(-90)))
                 .build();
 
         Trajectory collectDuck = drive.trajectoryBuilder(goToDuck.end())
-                .lineTo(new Vector2d(-56, 63))
+                .lineTo(new Vector2d(-56, -63)/*, SampleMecanumDrive.getVelocityConstraint(2, Math.toRadians(180), 13)*/)
                 .build();
 
         Trajectory deliverDuck = drive.trajectoryBuilder(collectDuck.end())
-                .lineToLinearHeading(new Pose2d(-24, 38, Math.toRadians(135)))
+                .lineToLinearHeading(new Pose2d(-24, -38, Math.toRadians(-135)))
                 .build();
 
         Trajectory parkInStorage = drive.trajectoryBuilder(deliverDuck.end(), true)
-                .lineToLinearHeading(new Pose2d(-60, 36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(-90)))
                 .build();
 
         ElapsedTime waitTimer = new ElapsedTime();
