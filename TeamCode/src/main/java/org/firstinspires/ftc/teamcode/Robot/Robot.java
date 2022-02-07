@@ -5,6 +5,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.util.List;
 
 @Config
@@ -21,7 +23,7 @@ public class Robot {
     public Carousel carousel;
     public Intake intake;
     public Lift lift;
-    // Lights lights;
+    public Lights lights;
 
     private Subsystem[] subsystems;
 
@@ -37,12 +39,12 @@ public class Robot {
         this.carousel = new Carousel(hwMap);
         this.intake = new Intake(hwMap);
         this.lift = new Lift(hwMap);
-        // this.lights = new Lights(hwMap);
+        this.lights = new Lights(hwMap);
 
-        this.subsystems = new Subsystem[] {drivetrain, carousel, intake /*, lights*/};
+        this.subsystems = new Subsystem[] {drivetrain, carousel, intake, lift, lights};
     }
 
-    public void drive(double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
+    public void drive(Telemetry telemetry, double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
                       boolean duckBackward, boolean intakeForward, boolean intakeBackward,
                       boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit,
                       boolean cancelAutomation, boolean incrementLocation, boolean decrementLocation) {
@@ -51,10 +53,13 @@ public class Robot {
         carousel.drive(duckForward, duckBackward);
         intake.drive(intakeForward, intakeBackward);
         lift.drive(liftUp, liftDown, automaticLift, automaticDeposit,
-                cancelAutomation, incrementLocation, decrementLocation);
+                cancelAutomation, incrementLocation, decrementLocation,
+                telemetry);
         // lights logic
         subsystemLoop();
     }
+
+
 
     private void subsystemLoop() {
         // Clearing bulk cache as required by manual bulk caching
