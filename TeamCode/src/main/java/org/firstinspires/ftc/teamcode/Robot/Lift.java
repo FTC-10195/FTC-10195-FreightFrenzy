@@ -6,22 +6,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Config
 public class Lift extends Subsystem {
     public static int lowLocation = 600;
     public static int midLocation = 1300;
-    public static int highLocation = 2000;
+    public static int highLocation = 1900;
     public static int sharedLocation = 150;
-    public static double basketDeposit = 0.9;
-    public static double basketCollect = 0.5;
+    public static double basketDeposit = 0;
+    public static double basketCollect = 0.744;
+    public static double basketHold = 0.5;
     public static double depositTime = 0.5;
-    public static double desiredLiftPower = 0.25;
+    public static double desiredLiftPower = 1;
 
     private enum LiftState {
         START,
         LIFT,
         DEPOSIT,
         RETRACT,
+        RETRACT_FULLY,
         STOP
     }
     private LiftState liftState = LiftState.START;
@@ -64,15 +68,18 @@ public class Lift extends Subsystem {
     public Lift(HardwareMap hwMap) {
         lift = hwMap.get(DcMotorEx.class, "lift");
         basket = hwMap.get(Servo.class, "basket");
-        lift.setDirection(DcMotorEx.Direction.FORWARD);
+        lift.setDirection(DcMotorEx.Direction.REVERSE);
         lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        basketPosition = basketCollect;
     }
 
     public void drive(boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit,
-                      boolean cancelAutomation, boolean incrementLocation, boolean decrementLocation) {
+                      boolean cancelAutomation, boolean incrementLocation, boolean decrementLocation,
+                      Telemetry telemetry) {
         manualLift(liftUp, liftDown);
-        automaticLift(automaticLift, automaticDeposit, cancelAutomation);
+        automaticLift(automaticLift, automaticDeposit, cancelAutomation,
+                telemetry);
         changeDepositLocation(incrementLocation, decrementLocation);
     }
 
@@ -86,21 +93,27 @@ public class Lift extends Subsystem {
         }
     }
 
-    private void automaticLift(boolean automaticLift, boolean automaticDeposit, boolean cancelAutomation) {
+    private void automaticLift(boolean automaticLift, boolean automaticDeposit, boolean cancelAutomation, Telemetry telemetry) {
         int depositTicks = depositLocation.ticks;
+        telemetry.addData("Lift State", liftState.name());
+        telemetry.addData("Lift Power", liftPower);
+        telemetry.update();
         switch (liftState) {
             case START:
                 if (automaticLift) {
                     lift.setTargetPosition(depositTicks);
                     lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     liftPower = desiredLiftPower;
+                    basketPosition = basketHold;
                     liftState = LiftState.LIFT;
                 }
                 break;
 
             case LIFT:
+                liftPower = desiredLiftPower;
                 if (depositTicks - getPosition() < 50) {
                     if (automaticDeposit) {
+                        liftPower = 0;
                         liftTimer.reset();
                         liftState = LiftState.DEPOSIT;
                     }
@@ -118,11 +131,17 @@ public class Lift extends Subsystem {
             case RETRACT:
                 lift.setTargetPosition(0);
                 liftPower = desiredLiftPower;
-                if (getPosition() < 50) {
-                    resetPosition();
-                    liftState = LiftState.STOP;
+                if (getPosition() < 10) {
+                    liftTimer.reset();
+                    liftState = LiftState.RETRACT_FULLY;
                 }
                 break;
+
+            case RETRACT_FULLY:
+                liftPower = desiredLiftPower / 2;
+                if (liftTimer.seconds() > 0.5) {
+                    liftState = LiftState.STOP;
+                }
 
             case STOP:
                 liftPower = 0;
@@ -161,5 +180,6 @@ public class Lift extends Subsystem {
     public void subsystemLoop() {
         lift.setPower(liftPower);
         basket.setPosition(basketPosition);
+
     }
 }
