@@ -1,4 +1,7 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.Tests;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -6,9 +9,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
 
 @Config
 @TeleOp(name = "TestTeleOp", group = "a")
