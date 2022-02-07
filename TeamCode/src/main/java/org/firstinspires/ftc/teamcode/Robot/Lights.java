@@ -10,8 +10,7 @@ public class Lights extends Subsystem {
     private BlinkinPattern pattern;
 
     public final BlinkinPattern FREIGHT_DETECTED = BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
-    public final BlinkinPattern RED_ALLIANCE = BlinkinPattern.RAINBOW_LAVA_PALETTE;
-    public final BlinkinPattern BLUE_ALLIANCE = BlinkinPattern.RAINBOW_OCEAN_PALETTE;
+    public final BlinkinPattern STANDARD_PATTERN = BlinkinPattern.CP1_2_END_TO_END_BLEND;
 
     FreightDetector freightDetector;
 
@@ -27,10 +26,8 @@ public class Lights extends Subsystem {
     public void freightDetected() {
         if (freightDetector.freightDetected()) {
             lights.setPattern(FREIGHT_DETECTED);
-        } else if (Robot.alliance == Robot.Alliance.RED) {
-            lights.setPattern(RED_ALLIANCE);
         } else {
-            lights.setPattern(BLUE_ALLIANCE);
+            lights.setPattern(STANDARD_PATTERN);
         }
     }
 
