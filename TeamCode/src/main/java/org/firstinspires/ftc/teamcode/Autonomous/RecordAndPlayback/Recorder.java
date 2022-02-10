@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@TeleOp(name = "Recorder", group = "Record")
 public class Recorder extends LinearOpMode {
 
     double speedMultiplier = 0.6;
