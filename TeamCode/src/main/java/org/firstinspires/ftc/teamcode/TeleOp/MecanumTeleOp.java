@@ -36,6 +36,8 @@ public class MecanumTeleOp extends LinearOpMode {
                 gamepad2.left_trigger > 0.1,
                 gamepad1.dpad_up || gamepad2.x,
                 gamepad1.dpad_down || gamepad2.b,
+                gamepad2.dpad_down,
+                gamepad2.dpad_right,
                 gamepad2.dpad_up,
                 gamepad2.a,
                 gamepad1.y || gamepad2.y,
