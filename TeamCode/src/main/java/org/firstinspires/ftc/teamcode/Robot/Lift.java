@@ -12,12 +12,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Lift extends Subsystem {
     public static int lowLocation = 600;
     public static int midLocation = 1300;
-    public static int highLocation = 1900;
-    public static int sharedLocation = 150;
-    public static double basketDeposit = 0;
+    public static int highLocation = 2000;
+    public static int sharedLocation = 600;
+    public static double basketDeposit = 0.08;
     public static double basketCollect = 0.744;
     public static double basketHold = 0.5;
-    public static double depositTime = 0.5;
+    public static double depositTime = 1.0;
     public static double desiredLiftPower = 1;
 
     private enum LiftState {
@@ -38,14 +38,6 @@ public class Lift extends Subsystem {
 
         private static final DepositLocation[] states = values();
 
-        private DepositLocation next() {
-            return states[(this.ordinal() + 1) % states.length];
-        }
-
-        private DepositLocation previous() {
-            return states[(this.ordinal() - 1) % states.length];
-        }
-
         public int ticks;
 
         DepositLocation(int ticks) {
@@ -61,6 +53,7 @@ public class Lift extends Subsystem {
 
     private double liftPower;
     private double basketPosition;
+    int depositTicks;
 
     private DcMotorEx lift;
     public Servo basket;
@@ -74,13 +67,15 @@ public class Lift extends Subsystem {
         basketPosition = basketCollect;
     }
 
-    public void drive(boolean liftUp, boolean liftDown, boolean automaticLift, boolean automaticDeposit,
-                      boolean cancelAutomation, boolean incrementLocation, boolean decrementLocation,
+    public void drive(boolean liftUp, boolean liftDown, boolean automaticLiftLow,
+                      boolean automaticLiftMiddle, boolean automaticLiftHigh,
+                      boolean automaticDeposit, boolean cancelAutomation,
                       Telemetry telemetry) {
         manualLift(liftUp, liftDown);
-        automaticLift(automaticLift, automaticDeposit, cancelAutomation,
+        automaticLift(automaticLiftLow, automaticLiftMiddle,
+                automaticLiftHigh,
+                automaticDeposit, cancelAutomation,
                 telemetry);
-        changeDepositLocation(incrementLocation, decrementLocation);
     }
 
     private void manualLift(boolean liftUp, boolean liftDown) {
@@ -93,15 +88,38 @@ public class Lift extends Subsystem {
         }
     }
 
-    private void automaticLift(boolean automaticLift, boolean automaticDeposit, boolean cancelAutomation, Telemetry telemetry) {
-        int depositTicks = depositLocation.ticks;
+    private void automaticLift(boolean automaticLiftLow, boolean automaticLiftMiddle,
+                               boolean automaticLiftHigh,
+                               boolean automaticDeposit, boolean cancelAutomation,
+                               Telemetry telemetry) {
         telemetry.addData("Lift State", liftState.name());
         telemetry.addData("Lift Power", liftPower);
         telemetry.update();
         switch (liftState) {
             case START:
-                if (automaticLift) {
+                if (automaticLiftLow) {
+                    depositLocation = DepositLocation.LOW;
+                    depositTicks = depositLocation.ticks;
                     lift.setTargetPosition(depositTicks);
+
+                    lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    liftPower = desiredLiftPower;
+                    basketPosition = basketHold;
+                    liftState = LiftState.LIFT;
+                } else if (automaticLiftMiddle) {
+                    depositLocation = DepositLocation.MID;
+                    depositTicks = depositLocation.ticks;
+                    lift.setTargetPosition(depositTicks);
+
+                    lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    liftPower = desiredLiftPower;
+                    basketPosition = basketHold;
+                    liftState = LiftState.LIFT;
+                } else if (automaticLiftHigh) {
+                    depositLocation = DepositLocation.HIGH;
+                    depositTicks = depositLocation.ticks;
+                    lift.setTargetPosition(depositTicks);
+
                     lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     liftPower = desiredLiftPower;
                     basketPosition = basketHold;
@@ -142,6 +160,7 @@ public class Lift extends Subsystem {
                 if (liftTimer.seconds() > 0.5) {
                     liftState = LiftState.STOP;
                 }
+                break;
 
             case STOP:
                 liftPower = 0;
@@ -153,19 +172,6 @@ public class Lift extends Subsystem {
         if (cancelAutomation) {
             liftState = LiftState.STOP;
         }
-    }
-
-    private void changeDepositLocation(boolean increment, boolean decrement) {
-        if (increment && !previousIncrement && liftState == LiftState.START) {
-            depositLocation = depositLocation.next();
-        }
-
-        if (decrement && !previousDecrement && liftState == LiftState.START) {
-            depositLocation = depositLocation.previous();
-        }
-
-        previousIncrement = increment;
-        previousDecrement = decrement;
     }
 
     private int getPosition() {
