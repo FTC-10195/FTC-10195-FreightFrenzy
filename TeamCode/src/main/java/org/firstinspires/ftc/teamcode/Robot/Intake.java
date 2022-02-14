@@ -37,9 +37,9 @@ public class Intake extends Subsystem {
         }
 
         if (intakeOnForward) {
-            intakePower = desiredIntakePower;
+            intakePower = -desiredIntakePower;
         } else if (intakeOnBackward) {
-            intakePower = -desiredIntakePower / 4;
+            intakePower = desiredIntakePower / 1.5;
         } else {
             intakePower = 0;
         }
