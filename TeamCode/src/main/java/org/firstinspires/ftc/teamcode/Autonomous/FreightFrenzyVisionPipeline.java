@@ -10,6 +10,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
 
@@ -38,36 +39,37 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     /*
      * Working variables
      */
-    ArrayList<Mat> RegionCb;
+
+    CopyOnWriteArrayList<Mat> RegionCr = new CopyOnWriteArrayList<>();
     Mat YCrCb = new Mat();
-    Mat Cb = new Mat();
-    ArrayList<Integer> averages;
+    Mat Cr = new Mat();
+    CopyOnWriteArrayList<Integer> averages = new CopyOnWriteArrayList<>();
 
     // Volatile since accessed by OpMode thread without synchronization
     private volatile ElementPosition position = ElementPosition.LEFT;
 
     /**
-     * Takes the input and converts it into YCrCb colour space, then extracts the Cb channel to the 'Cb' matrix
+     * Takes the input and converts it into YCrCb colour space, then extracts the Cr channel to the 'Cr' matrix
      * @param input The input frame
      */
-    void inputToCb(Mat input)
+    void inputToCr(Mat input)
     {
         Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-        Core.extractChannel(YCrCb, Cb, 2);
+        Core.extractChannel(YCrCb, Cr, 1);
     }
 
     /**
-     * Initialises the pipeline and adds all of the submats to the RegionCb ArrayList
+     * Initialises the pipeline and adds all of the submats to the RegionCr ArrayList
      * @param firstFrame First captured frame
      */
     @Override
     public void init(Mat firstFrame)
     {
-        inputToCb(firstFrame);
+        inputToCr(firstFrame);
 
-        RegionCb.add(Cb.submat(new Rect(Region1[0], Region1[1])));
-        RegionCb.add(Cb.submat(new Rect(Region2[0], Region2[1])));
-        RegionCb.add(Cb.submat(new Rect(Region3[0], Region3[1])));
+        RegionCr.add(Cr.submat(new Rect(Region1[0], Region1[1])));
+        RegionCr.add(Cr.submat(new Rect(Region2[0], Region2[1])));
+        RegionCr.add(Cr.submat(new Rect(Region3[0], Region3[1])));
     }
 
     /**
@@ -78,13 +80,17 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input)
     {
+        inputToCr(input);
+
+        averages.clear();
+
         /*
          * Computes the average pixel value of each submat region and adds them to the
          * average ArrayList
          */
-        averages.add((int) Core.mean(RegionCb.get(0)).val[0]);
-        averages.add((int) Core.mean(RegionCb.get(1)).val[0]);
-        averages.add((int) Core.mean(RegionCb.get(2)).val[0]);
+        averages.add((int) Core.mean(RegionCr.get(0)).val[0]);
+        averages.add((int) Core.mean(RegionCr.get(1)).val[0]);
+        averages.add((int) Core.mean(RegionCr.get(2)).val[0]);
 
         /*
          * Draws rectangles on the screen denoting the locations of the sample regions; used for visual
@@ -94,19 +100,19 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
             input, // Buffer to draw on
             Region1[0], // First point which defines the rectangle
             Region1[1], // Second point which defines the rectangle
-            BLUE, // The color the rectangle is drawn in
+            BLUE, // The colour the rectangle is drawn in
             2); // Thickness of the rectangle lines
         Imgproc.rectangle(
             input, // Buffer to draw on
             Region2[0], // First point which defines the rectangle
             Region2[1], // Second point which defines the rectangle
-            BLUE, // The color the rectangle is drawn in
+            BLUE, // The colour the rectangle is drawn in
             2); // Thickness of the rectangle lines
         Imgproc.rectangle(
             input, // Buffer to draw on
             Region3[0], // First point which defines the rectangle
             Region3[1], // Second point which defines the rectangle
-            BLUE, // The color the rectangle is drawn in
+            BLUE, // The colour the rectangle is drawn in
             2); // Thickness of the rectangle lines
 
         /*
@@ -116,10 +122,10 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
         int maxRegion = averages.indexOf(Collections.max(averages));
 
         /*
-         * Based on the region that has the maximum pixel value, the position of the TSE is determined
+         * Based on the region that has the minimum Cr value, the position of the TSE is determined
          * accordingly
          *
-         * e.g. If the first region (region at index 0) has the maximum pixel value, then the position
+         * e.g. If the first region (region at index 0) has the minimum Cr value, then the position
          * of the TSE is the left
          */
         switch (maxRegion) {
@@ -144,7 +150,7 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
      * Returns the averages of each of the three regions in an ArrayList
      * @return The averages
      */
-    public ArrayList<Integer> getAnalysis()
+    public CopyOnWriteArrayList<Integer> getAnalysis()
     {
         return averages;
     }
