@@ -8,7 +8,6 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -32,14 +31,13 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
      * The values for the regions that the program detects in
      * TODO: Tune the positions and sizes of the regions
      */
-    public static final Point[] Region1 = {new Point(109, 98), new Point(149, 138)};
-    public static final Point[] Region2 = {new Point(181, 98), new Point(221, 138)};
-    public static final Point[] Region3 = {new Point(253, 98), new Point(293, 138)};
+    public static final Point[] Region1 = {new Point(0, 200), new Point(100, 300)};
+    public static final Point[] Region2 = {new Point(320, 200), new Point(420, 300)};
+    public static final Point[] Region3 = {new Point(640, 200), new Point(740, 300)};
 
     /*
      * Working variables
      */
-
     CopyOnWriteArrayList<Mat> RegionCr = new CopyOnWriteArrayList<>();
     Mat YCrCb = new Mat();
     Mat Cr = new Mat();
@@ -119,7 +117,7 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
          * Determines the region with the maximum pixel value by finding the maximum value in the averages
          * ArrayList
          */
-        int maxRegion = averages.indexOf(Collections.max(averages));
+        int maxRegion = averages.indexOf(Collections.min(averages));
 
         /*
          * Based on the region that has the minimum Cr value, the position of the TSE is determined
@@ -129,9 +127,9 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
          * of the TSE is the left
          */
         switch (maxRegion) {
-            case 0:
-            default:
+            case 0: default:
                 position = ElementPosition.LEFT;
+                break;
             case 1:
                 position = ElementPosition.MIDDLE;
                 break;

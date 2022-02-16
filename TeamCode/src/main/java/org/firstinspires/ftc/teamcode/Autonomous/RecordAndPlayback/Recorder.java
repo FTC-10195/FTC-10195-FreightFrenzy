@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot.Carousel;
+import org.firstinspires.ftc.teamcode.Robot.FreightDetector;
+import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Lift;
 
 import java.io.File;
@@ -27,6 +29,7 @@ public class Recorder extends LinearOpMode {
     double flVelo, frVelo, blVelo, brVelo, basketPosition, intakePower;
     int liftTargetPos, carouselVelo;
     DcMotorEx fl, fr, bl, br, lift, carousel, intake;
+    FreightDetector freightDetector;
     Servo basket;
 
     final double TICKS_PER_ROTATION = 537.7;
@@ -51,6 +54,7 @@ public class Recorder extends LinearOpMode {
         carousel = hardwareMap.get(DcMotorEx.class, "duck");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         basket = hardwareMap.get(Servo.class, "basket");
+        freightDetector = new FreightDetector(hardwareMap, null);
 
         // TODO: Find which motors to reverse
         fl.setDirection(DcMotorEx.Direction.REVERSE);
@@ -176,6 +180,9 @@ public class Recorder extends LinearOpMode {
 
     public void intake() {
         intakePower = gamepad1.right_trigger - gamepad1.left_trigger;
+        if (freightDetector.freightDetected()) {
+            intakePower = -Intake.desiredIntakePower / 1.3;
+        }
         intake.setPower(intakePower);
     }
 
