@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -63,6 +64,7 @@ public class Lift extends Subsystem {
         basket = hwMap.get(Servo.class, "basket");
         lift.setDirection(DcMotorEx.Direction.REVERSE);
         lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         basketPosition = basketCollect;
     }
@@ -94,6 +96,7 @@ public class Lift extends Subsystem {
                                Telemetry telemetry) {
         telemetry.addData("Lift State", liftState.name());
         telemetry.addData("Lift Power", liftPower);
+        telemetry.addData("Lift Encoder Value", getPosition());
         telemetry.update();
         switch (liftState) {
             case START:

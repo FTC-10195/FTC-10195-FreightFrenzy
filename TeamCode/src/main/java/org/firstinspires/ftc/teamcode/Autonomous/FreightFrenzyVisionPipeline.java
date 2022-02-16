@@ -8,8 +8,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
 
@@ -31,17 +31,17 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
      * The values for the regions that the program detects in
      * TODO: Tune the positions and sizes of the regions
      */
-    public static final Point[] Region1 = {new Point(109, 98), new Point(149, 138)};
-    public static final Point[] Region2 = {new Point(181, 98), new Point(221, 138)};
-    public static final Point[] Region3 = {new Point(253, 98), new Point(293, 138)};
+    public static final Point[] Region1 = {new Point(0, 200), new Point(100, 300)};
+    public static final Point[] Region2 = {new Point(320, 200), new Point(420, 300)};
+    public static final Point[] Region3 = {new Point(640, 200), new Point(740, 300)};
 
     /*
      * Working variables
      */
-    ArrayList<Mat> RegionCb;
+    CopyOnWriteArrayList<Mat> RegionCb = new CopyOnWriteArrayList<>();
     Mat YCrCb = new Mat();
     Mat Cb = new Mat();
-    ArrayList<Integer> averages;
+    CopyOnWriteArrayList<Integer> averages = new CopyOnWriteArrayList<>();
 
     // Volatile since accessed by OpMode thread without synchronization
     private volatile ElementPosition position = ElementPosition.LEFT;
@@ -53,7 +53,7 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     void inputToCb(Mat input)
     {
         Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-        Core.extractChannel(YCrCb, Cb, 2);
+        Core.extractChannel(YCrCb, Cb, 1);
     }
 
     /**
@@ -78,6 +78,10 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input)
     {
+        inputToCb(input);
+
+        averages.clear();
+
         /*
          * Computes the average pixel value of each submat region and adds them to the
          * average ArrayList
@@ -113,7 +117,7 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
          * Determines the region with the maximum pixel value by finding the maximum value in the averages
          * ArrayList
          */
-        int maxRegion = averages.indexOf(Collections.max(averages));
+        int maxRegion = averages.indexOf(Collections.min(averages));
 
         /*
          * Based on the region that has the maximum pixel value, the position of the TSE is determined
@@ -123,9 +127,9 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
          * of the TSE is the left
          */
         switch (maxRegion) {
-            case 0:
-            default:
+            case 0: default:
                 position = ElementPosition.LEFT;
+                break;
             case 1:
                 position = ElementPosition.MIDDLE;
                 break;
@@ -144,7 +148,7 @@ public class FreightFrenzyVisionPipeline extends OpenCvPipeline {
      * Returns the averages of each of the three regions in an ArrayList
      * @return The averages
      */
-    public ArrayList<Integer> getAnalysis()
+    public CopyOnWriteArrayList<Integer> getAnalysis()
     {
         return averages;
     }

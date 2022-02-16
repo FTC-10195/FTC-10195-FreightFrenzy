@@ -14,11 +14,14 @@ public class Intake extends Subsystem {
     private double intakePower;
 
     private DcMotorEx intakeMotor;
+    private FreightDetector freightDetector;
 
     public Intake(HardwareMap hwMap) {
         intakeMotor = hwMap.get(DcMotorEx.class, "intake");
         intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        freightDetector = new FreightDetector(hwMap, null);
     }
 
     public void drive(boolean intakeForward, boolean intakeBackward) {
@@ -39,9 +42,13 @@ public class Intake extends Subsystem {
         if (intakeOnForward) {
             intakePower = -desiredIntakePower;
         } else if (intakeOnBackward) {
-            intakePower = desiredIntakePower / 1.5;
+            intakePower = desiredIntakePower / 1.3;
         } else {
             intakePower = 0;
+        }
+
+        if (freightDetector.freightDetected()) {
+            intakePower = -Intake.desiredIntakePower / 1.3;
         }
     }
 
