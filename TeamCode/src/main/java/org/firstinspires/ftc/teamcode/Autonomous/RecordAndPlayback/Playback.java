@@ -21,7 +21,8 @@ import java.util.Scanner;
 @Autonomous(name = "Playback", group = "Record")
 public class Playback extends LinearOpMode {
 
-    double flVelo, frVelo, blVelo, brVelo, basketPosition, intakePower;
+    int flPos, frPos, blPos, brPos;
+    double basketPosition, intakePower;
     int liftTargetPos, carouselVelo;
     DcMotorEx fl, fr, bl, br, lift, carousel, intake;
     Servo basket;
@@ -138,31 +139,40 @@ public class Playback extends LinearOpMode {
     }
 
     public void setMotorsAndServos() {
-        flVelo = valList.get(currentIteration).get(0);
-        frVelo = valList.get(currentIteration).get(1);
-        blVelo = valList.get(currentIteration).get(2);
-        brVelo = valList.get(currentIteration).get(3);
+        flPos = (int) Math.round(valList.get(currentIteration).get(0));
+        frPos = (int) Math.round(valList.get(currentIteration).get(1));
+        blPos = (int) Math.round(valList.get(currentIteration).get(2));
+        brPos = (int) Math.round(valList.get(currentIteration).get(3));
         liftTargetPos = (int) Math.round(valList.get(currentIteration).get(4));
         basketPosition = valList.get(currentIteration).get(5);
         carouselVelo = (int) Math.round(valList.get(currentIteration).get(6));
         intakePower = valList.get(currentIteration).get(7);
 
-        fl.setVelocity(flVelo);
-        fr.setVelocity(frVelo);
-        bl.setVelocity(blVelo);
-        br.setVelocity(brVelo);
+        fl.setPower(1);
+        fr.setPower(1);
+        bl.setPower(1);
+        br.setPower(1);
         lift.setPower(1);
+
+        fl.setTargetPosition(flPos);
+        fr.setTargetPosition(frPos);
+        bl.setTargetPosition(blPos);
+        br.setTargetPosition(brPos);
         lift.setTargetPosition(liftTargetPos);
         basket.setPosition(basketPosition);
         carousel.setVelocity(carouselVelo);
         intake.setPower(intakePower);
 
+        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        telemetry.addData("fl velocity", flVelo);
-        telemetry.addData("fr velocity", frVelo);
-        telemetry.addData("bl velocity", blVelo);
-        telemetry.addData("br velocity", brVelo);
+        telemetry.addData("fl pos", flPos);
+        telemetry.addData("fr pos", frPos);
+        telemetry.addData("bl pos", blPos);
+        telemetry.addData("br pos", brPos);
         telemetry.addData("lift target position", liftTargetPos);
         telemetry.addData("basket position", basketPosition);
         telemetry.addData("carousel velocity", carouselVelo);
