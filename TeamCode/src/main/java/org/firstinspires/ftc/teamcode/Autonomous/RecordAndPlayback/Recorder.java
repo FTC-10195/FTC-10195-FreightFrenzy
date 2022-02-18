@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot.Carousel;
 import org.firstinspires.ftc.teamcode.Robot.FreightDetector;
-import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Lift;
 
 import java.io.File;
@@ -180,9 +179,11 @@ public class Recorder extends LinearOpMode {
 
     public void intake() {
         intakePower = gamepad1.right_trigger - gamepad1.left_trigger;
+        /*
         if (freightDetector.freightDetected()) {
             intakePower = -Intake.desiredIntakePower / 1.3;
         }
+         */
         intake.setPower(intakePower);
     }
 
