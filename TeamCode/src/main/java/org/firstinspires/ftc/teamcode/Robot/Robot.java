@@ -39,9 +39,9 @@ public class Robot {
         this.carousel = new Carousel(hwMap);
         this.intake = new Intake(hwMap);
         this.lift = new Lift(hwMap);
-        //this.lights = new Lights(hwMap);
+        this.lights = new Lights(hwMap);
 
-        this.subsystems = new Subsystem[] {drivetrain, carousel, intake, lift, /*lights*/};
+        this.subsystems = new Subsystem[] {drivetrain, carousel, intake, lift, lights};
     }
 
     public void drive(Telemetry telemetry, double leftX, double leftY, double rightX, double slowMode, boolean duckForward,
@@ -59,7 +59,7 @@ public class Robot {
                 automaticDeposit,
                 cancelAutomation,
                 telemetry);
-        // lights logic
+        lights.checkBasket();
         subsystemLoop();
     }
 
@@ -74,7 +74,5 @@ public class Robot {
         for (Subsystem subsystem : subsystems) {
             subsystem.subsystemLoop();
         }
-
-        Subsystem.dashboard.sendTelemetryPacket(Subsystem.packet);
     }
 }
