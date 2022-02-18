@@ -122,15 +122,6 @@ public class Playback extends LinearOpMode {
                 }
                 valList.add(currentVals);
             }
-            /*
-            while (sc.hasNextDouble() || sc.hasNextInt()) {
-                ArrayList<Double> currentVals = new ArrayList<>();
-                for (int i = 0; i < 8; i++) {
-                    currentVals.add(sc.nextDouble());
-                }
-                valList.add(currentVals);
-            }
-             */
             sc.close();
         } catch (InputMismatchException | FileNotFoundException e) {
             telemetry.addData("Error in retrieving playback file", e);
@@ -148,10 +139,10 @@ public class Playback extends LinearOpMode {
         carouselVelo = (int) Math.round(valList.get(currentIteration).get(6));
         intakePower = valList.get(currentIteration).get(7);
 
-        fl.setPower(1);
-        fr.setPower(1);
-        bl.setPower(1);
-        br.setPower(1);
+        fl.setPower(0.75);
+        fr.setPower(0.75);
+        bl.setPower(0.75);
+        br.setPower(0.75);
         lift.setPower(1);
 
         fl.setTargetPosition(flPos);
