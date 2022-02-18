@@ -11,9 +11,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Lift extends Subsystem {
-    public static int lowLocation = 600;
-    public static int midLocation = 1300;
-    public static int highLocation = 2000;
+    public static int lowLocation = 714;
+    public static int midLocation = 1056;
+    public static int highLocation = 2100;
     public static int sharedLocation = 600;
     public static double basketDeposit = 0.08;
     public static double basketCollect = 0.744;
