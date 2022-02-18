@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Drivetrain extends Subsystem {
     // Configuration parameters
-    public static double slowModePower = 0.35;
+    public static double slowModePower = 0.45;
     public static double normalModePower = 1;
     public static double buttonIsPressedThreshold = 0.10;
 
