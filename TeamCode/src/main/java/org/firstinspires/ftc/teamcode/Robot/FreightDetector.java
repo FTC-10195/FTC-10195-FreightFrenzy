@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class FreightDetector extends Subsystem {
-    public ColorSensor colorSensor;
+    public static ColorSensor colorSensor;
 
     public FreightDetector(HardwareMap hwMap, FtcDashboard dashboard) {
         colorSensor = hwMap.get(ColorSensor.class, "freightDetector");
@@ -17,11 +17,8 @@ public class FreightDetector extends Subsystem {
     public boolean freightDetected() {
         // if some condition is met then return true
         // TODO: add condition
-        if (colorSensor.blue() > 200) {
-            return true;
-        } else {
-            return false;
-        }
+        return colorSensor.red() > 200 || colorSensor.green() > 200 ||
+                colorSensor.blue() > 200 || colorSensor.alpha() > 200;
     }
 
     @Override
