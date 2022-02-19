@@ -10,6 +10,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
     protected Robot wildWing = new Robot();
 
+    private boolean music = false;
+    private int musicID;
+    private boolean first = true;
+
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot(wildWing, Robot.Alliance.BLUE);
@@ -21,9 +25,21 @@ public class MecanumTeleOp extends LinearOpMode {
 
     public void initRobot(Robot robot, Robot.Alliance alliance) {
         robot.init(hardwareMap, alliance);
+        /*musicID = hardwareMap.appContext.getResources().getIdentifier("koopacape", "raw", hardwareMap.appContext.getPackageName());
+        if (musicID != 0) {
+            music = SoundPlayer.getInstance().preload(
+                    hardwareMap.appContext,
+                    musicID
+            );
+        }*/
+
     }
 
     public void mainLoop(Robot robot) {
+        /*if (first && music) {
+            SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, musicID);
+            first = false;
+        }*/
         robot.drive(
                 telemetry,
                 gamepad1.left_stick_x,
