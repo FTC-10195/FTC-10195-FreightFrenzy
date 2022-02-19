@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Lights extends Subsystem {
     RevBlinkinLedDriver lights;
 
-    public final BlinkinPattern FREIGHT_DETECTED = BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+    public final BlinkinPattern FREIGHT_DETECTED = BlinkinPattern.ORANGE;
     public final BlinkinPattern STANDARD_PATTERN = BlinkinPattern.BLUE_VIOLET;
 
     private BlinkinPattern pattern = STANDARD_PATTERN;
