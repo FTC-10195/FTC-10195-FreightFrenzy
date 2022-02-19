@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake extends Subsystem {
-    public static int cooldown = 250;
+    public static int cooldown = 500;
     public static double desiredIntakePower = 0.8;
 
     private boolean intakeOnForward = false;
