@@ -80,7 +80,7 @@ public class SampleRevBlinkinLedDriver extends OpMode {
     {
         displayKind = DisplayKind.AUTO;
 
-        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
         pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
         blinkinLedDriver.setPattern(pattern);
 
