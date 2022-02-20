@@ -27,6 +27,10 @@ public class Recorder extends LinearOpMode {
 
     double flVelo, frVelo, blVelo, brVelo, basketPosition, intakePower;
     int liftTargetPos, carouselVelo;
+
+    int flPos = 0, frPos = 0, blPos = 0, brPos = 0;
+    long lastLoopTime;
+
     DcMotorEx fl, fr, bl, br, lift, carousel, intake;
     FreightDetector freightDetector;
     Servo basket;
@@ -96,6 +100,8 @@ public class Recorder extends LinearOpMode {
             telemetry.update();
         }
 
+        lastLoopTime = System.currentTimeMillis();
+
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain();
             lift();
@@ -141,6 +147,11 @@ public class Recorder extends LinearOpMode {
         fr.setVelocity(frVelo);
         bl.setVelocity(blVelo);
         br.setVelocity(brVelo);
+
+        flPos = fl.getCurrentPosition();
+        frPos = fr.getCurrentPosition();
+        blPos = bl.getCurrentPosition();
+        brPos = br.getCurrentPosition();
     }
 
     public void lift() {
@@ -179,20 +190,20 @@ public class Recorder extends LinearOpMode {
 
     public void intake() {
         intakePower = gamepad1.right_trigger - gamepad1.left_trigger;
-        /*
-        if (freightDetector.freightDetected()) {
+
+        /*if (freightDetector.freightDetected()) {
             intakePower = -Intake.desiredIntakePower / 1.3;
-        }
-         */
+        }*/
+
         intake.setPower(intakePower);
     }
 
     public void recordValues() {
         ArrayList<Double> valLog = new ArrayList<>();
-        valLog.add(flVelo);
-        valLog.add(frVelo);
-        valLog.add(blVelo);
-        valLog.add(brVelo);
+        valLog.add((double) flPos);
+        valLog.add((double) frPos);
+        valLog.add((double) blPos);
+        valLog.add((double) brPos);
         valLog.add((double) liftTargetPos);
         valLog.add(basketPosition);
         valLog.add((double) carouselVelo);

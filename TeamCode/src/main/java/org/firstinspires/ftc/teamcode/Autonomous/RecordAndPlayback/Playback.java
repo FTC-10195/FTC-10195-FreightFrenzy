@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.Autonomous.RecordAndPlayback;
 
-import static org.firstinspires.ftc.teamcode.Robot.Intake.cooldown;
-
 import android.os.Environment;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot.Lift;
@@ -18,22 +15,27 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-@Autonomous(name = "Playback", group = "Record")
-public class Playback extends LinearOpMode {
+//@Autonomous(name = "Playback", group = "Record")
+public class Playback {
 
     double flVelo, frVelo, blVelo, brVelo, basketPosition, intakePower;
     int liftTargetPos, carouselVelo;
     DcMotorEx fl, fr, bl, br, lift, carousel, intake;
     Servo basket;
 
-    ArrayList<ArrayList<Double>> valList = new ArrayList<>();
-    int currentIteration = 0;
+    public ArrayList<ArrayList<Double>> valList = new ArrayList<>();
+    public int currentIteration = 0;
 
     int saveLocation = 1;
     long incrementorLastPressed = 0;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
+    HardwareMap hardwareMap;
+
+    public Playback(HardwareMap hwMap) {
+        hardwareMap = hwMap;
+    }
+
+    /*public void runOpMode() throws InterruptedException {
         // TODO: add init stuff
         // Set up the motors and servos
         fl = hardwareMap.get(DcMotorEx.class, "fl");
@@ -101,11 +103,16 @@ public class Playback extends LinearOpMode {
             }
         }
     }
+*/
+    public void run() {
+        setMotorsAndServos();
+        currentIteration++;
+    }
 
     public void fileInit() {
         File root = new File(Environment.getExternalStorageDirectory(), "recorder");
         if (!root.exists()) {
-            telemetry.addData("No Playback Data Exists", "");
+            //telemetry.addData("No Playback Data Exists", "");
         }
 
         File filePath = new File(root, "auto" + saveLocation + ".txt");
@@ -132,8 +139,79 @@ public class Playback extends LinearOpMode {
              */
             sc.close();
         } catch (InputMismatchException | FileNotFoundException e) {
-            telemetry.addData("Error in retrieving playback file", e);
-            telemetry.update();
+            //telemetry.addData("Error in retrieving playback file", e);
+            //telemetry.update();
+        }
+    }
+
+    public void fileInit(String path) {
+        // TODO: add init stuff
+        // Set up the motors and servos
+        fl = hardwareMap.get(DcMotorEx.class, "fl");
+        fr = hardwareMap.get(DcMotorEx.class, "fr");
+        bl = hardwareMap.get(DcMotorEx.class, "bl");
+        br = hardwareMap.get(DcMotorEx.class, "br");
+        carousel = hardwareMap.get(DcMotorEx.class, "duck");
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        basket = hardwareMap.get(Servo.class, "basket");
+
+        // TODO: Find which motors to reverse
+        fl.setDirection(DcMotorEx.Direction.REVERSE);
+        fr.setDirection(DcMotorEx.Direction.FORWARD);
+        bl.setDirection(DcMotorEx.Direction.REVERSE);
+        br.setDirection(DcMotorEx.Direction.FORWARD);
+        carousel.setDirection(DcMotorEx.Direction.FORWARD);
+        lift.setDirection(DcMotorEx.Direction.REVERSE);
+
+        // Set the behaviour of the motors when a power of 0 is passed; brake means it stops in its current state,
+        // float means it allows the motor to freely slow down to a stop
+        fl.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        fr.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        carousel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        lift.setDirection(DcMotorEx.Direction.REVERSE);
+        lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake.setDirection(DcMotorEx.Direction.REVERSE);
+        intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        basketPosition = Lift.basketCollect;
+
+        File root = new File(Environment.getExternalStorageDirectory(), "recorder");
+        if (!root.exists()) {
+            //telemetry.addData("No Playback Data Exists", "");
+        }
+
+        File filePath = new File(root, path + ".txt");
+
+        try {
+            Scanner sc = new Scanner(filePath);
+            while (sc.hasNextLine()) {
+                ArrayList<Double> currentVals = new ArrayList<>();
+                String line = sc.nextLine();
+                String[] vals = line.split(" ");
+                for (String val : vals) {
+                    currentVals.add(Double.parseDouble(val));
+                }
+                valList.add(currentVals);
+            }
+            /*
+            while (sc.hasNextDouble() || sc.hasNextInt()) {
+                ArrayList<Double> currentVals = new ArrayList<>();
+                for (int i = 0; i < 8; i++) {
+                    currentVals.add(sc.nextDouble());
+                }
+                valList.add(currentVals);
+            }
+             */
+            sc.close();
+        } catch (InputMismatchException | FileNotFoundException e) {
+            /*telemetry.addData("Error in retrieving playback file", e);
+            telemetry.update();*/
         }
     }
 
@@ -158,15 +236,5 @@ public class Playback extends LinearOpMode {
         intake.setPower(intakePower);
 
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        telemetry.addData("fl velocity", flVelo);
-        telemetry.addData("fr velocity", frVelo);
-        telemetry.addData("bl velocity", blVelo);
-        telemetry.addData("br velocity", brVelo);
-        telemetry.addData("lift target position", liftTargetPos);
-        telemetry.addData("basket position", basketPosition);
-        telemetry.addData("carousel velocity", carouselVelo);
-        telemetry.addData("intake power", intakePower);
-        telemetry.update();
     }
 }

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
-@TeleOp(name = "Mecanum TeleOp", group = "2")
+@TeleOp(name = "MecanumTeleOp", group = "2")
 public class MecanumTeleOp extends LinearOpMode {
 
     protected Robot wildWing = new Robot();
