@@ -103,6 +103,7 @@ public class Recorder extends LinearOpMode {
         lastLoopTime = System.currentTimeMillis();
 
         while (opModeIsActive() && !isStopRequested()) {
+            lastLoopTime = System.currentTimeMillis();
             drivetrain();
             lift();
             carousel();
@@ -148,10 +149,10 @@ public class Recorder extends LinearOpMode {
         bl.setVelocity(blVelo);
         br.setVelocity(brVelo);
 
-        flPos += flVelo * (System.currentTimeMillis() - lastLoopTime);
-        frPos += flVelo * (System.currentTimeMillis() - lastLoopTime);
-        blPos += flVelo * (System.currentTimeMillis() - lastLoopTime);
-        brPos += flVelo * (System.currentTimeMillis() - lastLoopTime);
+        flPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
+        frPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
+        blPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
+        brPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
     }
 
     public void lift() {
