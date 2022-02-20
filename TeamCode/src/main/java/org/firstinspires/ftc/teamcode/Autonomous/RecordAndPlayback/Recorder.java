@@ -115,9 +115,9 @@ public class Recorder extends LinearOpMode {
     }
 
     public void drivetrain() {
-        double y = -(Math.signum(gamepad1.left_stick_y) * Math.pow(gamepad1.left_stick_y, 2)); // Reversed
-        double x = Math.signum(gamepad1.left_stick_x) * Math.pow(gamepad1.left_stick_x, 2) * (1.41); // Counteract imperfect strafing
-        double rx = Math.signum(gamepad1.right_stick_x) * Math.pow(gamepad1.right_stick_x, 2);
+        double y = -gamepad1.left_stick_y; // Reversed
+        double x = gamepad1.left_stick_x * (1.41); // Counteract imperfect strafing
+        double rx = gamepad1.right_stick_x;
 
         flVelo = speedMultiplier * (y + x + rx);
         frVelo = speedMultiplier * (y - x - rx);
