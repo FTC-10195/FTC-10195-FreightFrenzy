@@ -57,7 +57,12 @@ public class Recorder extends LinearOpMode {
         carousel = hardwareMap.get(DcMotorEx.class, "duck");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         basket = hardwareMap.get(Servo.class, "basket");
-        freightDetector = new FreightDetector(hardwareMap, null);
+
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // TODO: Find which motors to reverse
         fl.setDirection(DcMotorEx.Direction.REVERSE);
@@ -84,7 +89,6 @@ public class Recorder extends LinearOpMode {
         intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         basketPosition = Lift.basketCollect;
-
 
         while (!opModeIsActive()) {
             if (gamepad1.dpad_up && System.currentTimeMillis() - incrementorLastPressed > 500) {
@@ -149,10 +153,10 @@ public class Recorder extends LinearOpMode {
         bl.setVelocity(blVelo);
         br.setVelocity(brVelo);
 
-        flPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
-        frPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
-        blPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
-        brPos += flVelo * (System.currentTimeMillis() - lastLoopTime) / 1000;
+        flPos = fl.getCurrentPosition();
+        frPos = fr.getCurrentPosition();
+        blPos = bl.getCurrentPosition();
+        brPos = br.getCurrentPosition();
     }
 
     public void lift() {
